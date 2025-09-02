@@ -163,6 +163,47 @@ export interface WeeklyReport {
   }
 }
 
+export interface Course {
+  id: number
+  title: string
+  description: string
+  created_at: string
+}
+
+export interface Lesson {
+  id: number
+  title: string
+  description: string
+  order_index: number
+  word_count: number
+}
+
+export interface Module {
+  id: number
+  title: string
+  description: string
+  order_index: number
+  lessons: Lesson[]
+}
+
+export interface CourseDetail {
+  id: number
+  title: string
+  description: string
+  modules: Module[]
+}
+
+export interface Word {
+  id: number
+  word: string
+  meaning: string
+  definition: string
+  example_sentence: string
+  image_url: string
+  audio_url: string
+  order_index: number
+}
+
 export const teacherApi = {
   getDashboard: async (): Promise<DashboardData> => {
     const response = await api.get<ApiResponse<DashboardData>>('/teacher/dashboard')
@@ -210,6 +251,47 @@ export const teacherApi = {
     confirm_password: string
   }): Promise<{ message: string }> => {
     const response = await api.patch<ApiResponse<{ message: string }>>('/teacher/password', data)
+    return response.data.data
+  },
+}
+
+// Create separate API instance for content (no /api prefix)
+const contentApiInstance = axios.create({
+  baseURL: 'https://edutizimbackend-production.up.railway.app',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+contentApiInstance.interceptors.request.use((config) => {
+  const { auth } = useAuthStore.getState()
+  if (auth.accessToken) {
+    config.headers.Authorization = `Bearer ${auth.accessToken}`
+  }
+  return config
+})
+
+export const contentApi = {
+  getCourses: async (centerId: number): Promise<Course[]> => {
+    console.log('Fetching courses for center:', centerId)
+    const url = `/api/content/courses?center_id=${centerId}`
+    console.log('Full URL:', url)
+    const response = await contentApiInstance.get<ApiResponse<Course[]>>(url)
+    console.log('Courses response:', response.data)
+    return response.data.data
+  },
+
+  getCourseDetail: async (courseId: number): Promise<CourseDetail> => {
+    console.log('Fetching course detail for:', courseId)
+    const response = await contentApiInstance.get<ApiResponse<CourseDetail>>(`/api/content/courses/${courseId}`)
+    console.log('Course detail response:', response.data)
+    return response.data.data
+  },
+
+  getLessonWords: async (lessonId: number): Promise<Word[]> => {
+    console.log('Fetching lesson words for:', lessonId)
+    const response = await contentApiInstance.get<ApiResponse<Word[]>>(`/content/lessons/${lessonId}/words`)
+    console.log('Lesson words response:', response.data)
     return response.data.data
   },
 }

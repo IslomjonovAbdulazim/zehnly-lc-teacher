@@ -5,6 +5,7 @@ import {
   GraduationCap,
   TrendingDown,
   Settings,
+  BookOpen,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -29,6 +30,11 @@ export const sidebarData: SidebarData = {
           title: 'Guruhlar',
           url: '/groups',
           icon: Users,
+        },
+        {
+          title: 'Kontent',
+          url: '/content',
+          icon: BookOpen,
         },
       ],
     },

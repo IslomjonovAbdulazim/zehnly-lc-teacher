@@ -168,31 +168,24 @@ export function StrugglingStudents() {
         <div className='space-y-4'>
           {strugglingStudents.map((student) => (
             <Card key={student.student.id} className='hover:shadow-md transition-shadow'>
-              <CardContent className='p-6'>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center space-x-4'>
+              <CardContent className='p-4 sm:p-6'>
+                <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0'>
+                  <div className='flex items-center space-x-4 flex-1'>
                     <Avatar className='h-12 w-12'>
                       <AvatarFallback>
                         {student.student.full_name.split(' ').map(n => n[0]).join('')}
                       </AvatarFallback>
                     </Avatar>
-                    <div className='space-y-1'>
+                    <div className='space-y-1 flex-1'>
                       <h3 className='font-medium text-lg'>{student.student.full_name}</h3>
-                      <div className='flex items-center space-x-2'>
-                        <Badge variant={getReasonBadgeVariant(student.reason)}>
-                          {student.reason}
-                        </Badge>
-                        {student.avg_percentage > 0 && (
-                          <span className={`text-sm font-medium ${getPercentageColor(student.avg_percentage)}`}>
-                            {student.avg_percentage}% avg score
-                          </span>
-                        )}
-                      </div>
+                      <Badge variant={getReasonBadgeVariant(student.reason)}>
+                        {student.reason}
+                      </Badge>
                     </div>
                   </div>
                   
-                  <div className='flex items-center space-x-3'>
-                    <div className='text-right'>
+                  <div className='flex items-center space-x-4 w-full sm:w-auto'>
+                    <div className='text-center'>
                       <div className={`text-2xl font-bold ${getPercentageColor(student.avg_percentage)}`}>
                         {student.avg_percentage === 0 ? 'N/A' : `${student.avg_percentage}%`}
                       </div>
@@ -202,9 +195,10 @@ export function StrugglingStudents() {
                     <Button 
                       size='sm'
                       onClick={() => handleViewStudent(student.student.id)}
+                      className='flex-shrink-0'
                     >
-                      <Eye className='h-4 w-4 mr-2' />
-                      View Details
+                      <Eye className='h-4 w-4 sm:mr-2' />
+                      <span className='hidden sm:inline'>View Details</span>
                     </Button>
                   </div>
                 </div>

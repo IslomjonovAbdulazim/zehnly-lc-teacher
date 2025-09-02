@@ -16,7 +16,7 @@ export const sidebarData: SidebarData = {
   },
   teams: [
     {
-      name: 'O\'qituvchi Portali',
+      name: 'Zehnly Teacher',
       logo: GraduationCap,
       plan: 'O\'quv Markazi',
     },

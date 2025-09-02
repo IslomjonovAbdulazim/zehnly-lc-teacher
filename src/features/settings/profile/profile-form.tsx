@@ -144,7 +144,7 @@ export function ProfileForm() {
                   <PasswordInput placeholder='Yangi parolni kiriting' {...field} />
                 </FormControl>
                 <FormDescription>
-                  Parol kamida 8 ta belgidan iborat bo`lishi kerak.
+                  Parol kamida 6 ta belgidan iborat bo`lishi kerak.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

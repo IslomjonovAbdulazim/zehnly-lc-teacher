@@ -25,8 +25,7 @@ const formSchema = z.object({
   }),
   password: z
     .string()
-    .min(1, 'Iltimos, parolingizni kiriting')
-    .min(7, 'Parol kamida 7 ta belgidan iborat bo\'lishi kerak'),
+    .min(2, 'Parol kamida 2 ta belgidan iborat bo`lishi kerak'),
 })
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {

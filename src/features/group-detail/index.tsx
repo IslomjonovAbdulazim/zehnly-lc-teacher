@@ -16,39 +16,8 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
-
-interface Student {
-  profile: {
-    id: number
-    full_name: string
-    created_at: string
-  }
-  progress: {
-    completed_lessons: number
-    total_lessons: number
-    average_percentage: number
-    total_coins: number
-    total_points: number
-  }
-  rank: number
-}
-
-interface GroupDetail {
-  group: {
-    id: number
-    name: string
-    course_id: number
-  }
-  students: Student[]
-}
-
-interface LeaderboardEntry {
-  rank: number
-  profile_id: number
-  full_name: string
-  total_coins: number
-  avatar: string | null
-}
+import { teacherApi, type GroupDetail, type LeaderboardEntry } from '@/lib/api'
+import { toast } from 'sonner'
 
 export function GroupDetail() {
   const { groupId } = useParams({ strict: false })
@@ -59,68 +28,26 @@ export function GroupDetail() {
   const [activeTab, setActiveTab] = useState('leaderboard')
 
   useEffect(() => {
-    const mockGroupData: GroupDetail = {
-      group: {
-        id: parseInt(groupId || '1'),
-        name: "Beginner English A1",
-        course_id: 1
-      },
-      students: [
-        {
-          profile: {
-            id: 6,
-            full_name: "Abduazim",
-            created_at: "2025-08-31T16:52:04.928963"
-          },
-          progress: {
-            completed_lessons: 5,
-            total_lessons: 10,
-            average_percentage: 78.5,
-            total_coins: 150,
-            total_points: 150
-          },
-          rank: 1
-        },
-        {
-          profile: {
-            id: 7,
-            full_name: "Sarah Johnson",
-            created_at: "2025-08-30T14:20:00.000000"
-          },
-          progress: {
-            completed_lessons: 3,
-            total_lessons: 8,
-            average_percentage: 65.2,
-            total_coins: 120,
-            total_points: 120
-          },
-          rank: 2
-        }
-      ]
+    const loadGroupData = async () => {
+      if (!groupId) return
+      
+      try {
+        setLoading(true)
+        const [groupStudentsData, leaderboardData] = await Promise.all([
+          teacherApi.getGroupStudents(parseInt(groupId)),
+          teacherApi.getGroupLeaderboard(parseInt(groupId))
+        ])
+        setGroupData(groupStudentsData)
+        setLeaderboard(leaderboardData.leaderboard)
+      } catch (error) {
+        console.error('Failed to load group data:', error)
+        toast.error('Guruh ma\'lumotlarini yuklashda xatolik yuz berdi')
+      } finally {
+        setLoading(false)
+      }
     }
 
-    const mockLeaderboard: LeaderboardEntry[] = [
-      {
-        rank: 1,
-        profile_id: 6,
-        full_name: "Abduazim",
-        total_coins: 150,
-        avatar: null
-      },
-      {
-        rank: 2,
-        profile_id: 7,
-        full_name: "Sarah Johnson",
-        total_coins: 120,
-        avatar: null
-      }
-    ]
-    
-    setTimeout(() => {
-      setGroupData(mockGroupData)
-      setLeaderboard(mockLeaderboard)
-      setLoading(false)
-    }, 800)
+    loadGroupData()
   }, [groupId])
 
   const handleStudentClick = (studentId: number) => {

@@ -16,33 +16,8 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
-
-interface StudentProgress {
-  student: {
-    id: number
-    full_name: string
-    created_at: string
-  }
-  progress: Array<{
-    lesson_id: number
-    percentage: number
-    completed: boolean
-    last_practiced: string
-  }>
-  weak_words: Array<{
-    word_id: number
-    word: string
-    meaning: string
-    last_seven_attempts: string
-    total_correct: number
-    total_attempts: number
-  }>
-  recent_activity: Array<{
-    amount: number
-    source: string
-    earned_at: string
-  }>
-}
+import { teacherApi, type StudentProgress } from '@/lib/api'
+import { toast } from 'sonner'
 
 export function StudentProgress() {
   const { studentId } = useParams({ strict: false })
@@ -51,68 +26,22 @@ export function StudentProgress() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const mockData: StudentProgress = {
-      student: {
-        id: parseInt(studentId || '6'),
-        full_name: "Abduazim",
-        created_at: "2025-08-31T16:52:04.928963"
-      },
-      progress: [
-        {
-          lesson_id: 1,
-          percentage: 100,
-          completed: true,
-          last_practiced: "2024-01-20T14:30:00Z"
-        },
-        {
-          lesson_id: 2,
-          percentage: 75,
-          completed: false,
-          last_practiced: "2024-01-21T10:15:00Z"
-        },
-        {
-          lesson_id: 3,
-          percentage: 90,
-          completed: true,
-          last_practiced: "2024-01-22T09:20:00Z"
-        }
-      ],
-      weak_words: [
-        {
-          word_id: 15,
-          word: "apple",
-          meaning: "olma",
-          last_seven_attempts: "1010110",
-          total_correct: 45,
-          total_attempts: 60
-        },
-        {
-          word_id: 23,
-          word: "house",
-          meaning: "uy",
-          last_seven_attempts: "0110101",
-          total_correct: 32,
-          total_attempts: 48
-        }
-      ],
-      recent_activity: [
-        {
-          amount: 10,
-          source: "lesson",
-          earned_at: "2024-01-21T10:15:00Z"
-        },
-        {
-          amount: 5,
-          source: "revision",
-          earned_at: "2024-01-20T16:45:00Z"
-        }
-      ]
+    const loadStudentProgress = async () => {
+      if (!studentId) return
+      
+      try {
+        setLoading(true)
+        const data = await teacherApi.getStudentProgress(parseInt(studentId))
+        setStudentData(data)
+      } catch (error) {
+        console.error('Failed to load student progress:', error)
+        toast.error('Talaba muvaffaqiyati ma\'lumotini yuklashda xatolik yuz berdi')
+      } finally {
+        setLoading(false)
+      }
     }
-    
-    setTimeout(() => {
-      setStudentData(mockData)
-      setLoading(false)
-    }, 800)
+
+    loadStudentProgress()
   }, [studentId])
 
   const getAccuracyRate = (correct: number, total: number) => {

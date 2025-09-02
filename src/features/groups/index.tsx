@@ -15,14 +15,8 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
-
-interface Group {
-  id: number
-  name: string
-  course_id: number
-  student_count: number
-  created_at: string
-}
+import { teacherApi, type Group } from '@/lib/api'
+import { toast } from 'sonner'
 
 export function Groups() {
   const [groups, setGroups] = useState<Group[]>([])
@@ -30,34 +24,20 @@ export function Groups() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const mockGroups: Group[] = [
-      {
-        id: 1,
-        name: "Beginner English A1",
-        course_id: 1,
-        student_count: 15,
-        created_at: "2024-01-15T10:30:00Z"
-      },
-      {
-        id: 2,
-        name: "Intermediate English B1",
-        course_id: 2,
-        student_count: 12,
-        created_at: "2024-01-16T09:00:00Z"
-      },
-      {
-        id: 3,
-        name: "Advanced English C1",
-        course_id: 3,
-        student_count: 8,
-        created_at: "2024-01-17T11:15:00Z"
+    const loadGroups = async () => {
+      try {
+        setLoading(true)
+        const data = await teacherApi.getGroups()
+        setGroups(data)
+      } catch (error) {
+        console.error('Failed to load groups:', error)
+        toast.error('Guruhlarni yuklashda xatolik yuz berdi')
+      } finally {
+        setLoading(false)
       }
-    ]
-    
-    setTimeout(() => {
-      setGroups(mockGroups)
-      setLoading(false)
-    }, 800)
+    }
+
+    loadGroups()
   }, [])
 
   const handleViewGroup = (groupId: number) => {

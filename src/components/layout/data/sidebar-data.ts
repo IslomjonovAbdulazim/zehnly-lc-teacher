@@ -26,24 +26,9 @@ export const sidebarData: SidebarData = {
       title: 'O\'qitish',
       items: [
         {
-          title: 'Boshqaruv Paneli',
-          url: '/',
-          icon: LayoutDashboard,
-        },
-        {
           title: 'Guruhlar',
           url: '/groups',
           icon: Users,
-        },
-        {
-          title: 'Analitika',
-          url: '/analytics',
-          icon: BarChart3,
-        },
-        {
-          title: 'Qiynalayotgan Talabalar',
-          url: '/struggling',
-          icon: TrendingDown,
         },
       ],
     },

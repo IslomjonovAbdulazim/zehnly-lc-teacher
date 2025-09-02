@@ -12,72 +12,28 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
-
-interface DashboardData {
-  teacher: {
-    id: number
-    full_name: string
-  }
-  stats: {
-    assigned_groups: number
-    total_students: number
-  }
-  groups: Array<{
-    id: number
-    name: string
-    course_id: number
-    created_at: string
-  }>
-  recent_activity: Array<{
-    lesson_id: number
-    percentage: number
-    completed: boolean
-    last_practiced: string
-  }>
-}
+import { teacherApi, type DashboardData } from '@/lib/api'
+import { toast } from 'sonner'
 
 export function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const mockData: DashboardData = {
-      teacher: {
-        id: 4,
-        full_name: "Jane Smith"
-      },
-      stats: {
-        assigned_groups: 3,
-        total_students: 45
-      },
-      groups: [
-        {
-          id: 1,
-          name: "Beginner English A1",
-          course_id: 1,
-          created_at: "2024-01-15T10:30:00Z"
-        },
-        {
-          id: 2,
-          name: "Intermediate English B1", 
-          course_id: 2,
-          created_at: "2024-01-16T09:00:00Z"
-        }
-      ],
-      recent_activity: [
-        {
-          lesson_id: 5,
-          percentage: 85,
-          completed: true,
-          last_practiced: "2024-01-20T14:30:00Z"
-        }
-      ]
+    const loadDashboardData = async () => {
+      try {
+        setLoading(true)
+        const data = await teacherApi.getDashboard()
+        setDashboardData(data)
+      } catch (error) {
+        console.error('Failed to load dashboard data:', error)
+        toast.error('Dashboard ma\'lumotlarini yuklashda xatolik yuz berdi')
+      } finally {
+        setLoading(false)
+      }
     }
-    
-    setTimeout(() => {
-      setDashboardData(mockData)
-      setLoading(false)
-    }, 1000)
+
+    loadDashboardData()
   }, [])
 
   if (loading || !dashboardData) {

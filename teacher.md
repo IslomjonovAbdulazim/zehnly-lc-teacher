@@ -376,6 +376,52 @@ Get weekly activity report for teacher's groups
 - `revision`: Points earned from reviewing previous content
 - `bonus`: Points earned from special activities
 
+## Password Management
+
+### PATCH /teacher/password
+Change teacher password
+
+**Request:**
+```json
+{
+  "current_password": "oldpassword123",
+  "new_password": "newSecurePassword123",
+  "confirm_password": "newSecurePassword123"
+}
+```
+
+**Response (Success):**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "Password updated successfully"
+  }
+}
+```
+
+**Response (Error):**
+```json
+{
+  "success": false,
+  "detail": "New passwords do not match"
+}
+```
+
+```json
+{
+  "success": false,
+  "detail": "Current password is incorrect"
+}
+```
+
+```json
+{
+  "success": false,
+  "detail": "Teacher user not found"
+}
+```
+
 ## Common Error Responses
 
 ### Authentication Required

@@ -6,7 +6,9 @@ import { useNavigate } from '@tanstack/react-router'
 import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
-import { sleep, cn } from '@/lib/utils'
+import { cn } from '@/lib/utils'
+import { login } from '@/lib/auth-api'
+import { teacherApi } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -49,34 +51,44 @@ export function UserAuthForm({
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
 
-    // Mock successful authentication
-    const mockUser = {
-      accountNo: 'ACC001',
-      email: data.email,
-      role: ['user'],
-      exp: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
+    try {
+      const loginResponse = await login({
+        email: data.email,
+        password: data.password
+      })
+
+      // Set the access token first
+      auth.setAccessToken(loginResponse.access_token)
+
+      // Now get teacher details using the token
+      const dashboardData = await teacherApi.getDashboard()
+      
+      // Set user with teacher details from dashboard
+      const user = {
+        accountNo: dashboardData.teacher.id.toString(),
+        email: data.email,
+        role: ['teacher'],
+        exp: Date.now() + (loginResponse.expires_in * 1000),
+        full_name: dashboardData.teacher.full_name
+      }
+      
+      auth.setUser(user)
+
+      // Redirect to the stored location or default to dashboard
+      const targetPath = redirectTo || '/'
+      navigate({ to: targetPath, replace: true })
+
+      toast.success(`Xush kelibsiz, ${dashboardData.teacher.full_name}!`)
+    } catch (error: any) {
+      console.error('Login failed:', error)
+      const errorMessage = error.response?.data?.detail || error.response?.data?.message || 'Kirish jarayonida xatolik yuz berdi'
+      toast.error(errorMessage)
+    } finally {
+      setIsLoading(false)
     }
-
-    toast.promise(sleep(2000), {
-      loading: 'Kirilmoqda...',
-      success: () => {
-        setIsLoading(false)
-
-        // Set user and access token
-        auth.setUser(mockUser)
-        auth.setAccessToken('mock-access-token')
-
-        // Redirect to the stored location or default to dashboard
-        const targetPath = redirectTo || '/'
-        navigate({ to: targetPath, replace: true })
-
-        return `Xush kelibsiz, ${data.email}!`
-      },
-      error: 'Xato',
-    })
   }
 
   return (

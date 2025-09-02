@@ -15,15 +15,8 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
-
-interface StrugglingStudent {
-  student: {
-    id: number
-    full_name: string
-  }
-  reason: string
-  avg_percentage: number
-}
+import { teacherApi, type StrugglingStudent } from '@/lib/api'
+import { toast } from 'sonner'
 
 export function StrugglingStudents() {
   const [strugglingStudents, setStrugglingStudents] = useState<StrugglingStudent[]>([])
@@ -31,45 +24,20 @@ export function StrugglingStudents() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const mockData: StrugglingStudent[] = [
-      {
-        student: {
-          id: 8,
-          full_name: "Mike Wilson"
-        },
-        reason: "Ma'lumot yo'q",
-        avg_percentage: 0
-      },
-      {
-        student: {
-          id: 9,
-          full_name: "Lisa Chen"
-        },
-        reason: "Past tugallanish darajasi",
-        avg_percentage: 35.5
-      },
-      {
-        student: {
-          id: 10,
-          full_name: "David Brown"
-        },
-        reason: "So'nggi faoliyat yo'q",
-        avg_percentage: 68.2
-      },
-      {
-        student: {
-          id: 11,
-          full_name: "Emma Davis"
-        },
-        reason: "Past tugallanish darajasi",
-        avg_percentage: 42.8
+    const loadStrugglingStudents = async () => {
+      try {
+        setLoading(true)
+        const data = await teacherApi.getStrugglingStudents()
+        setStrugglingStudents(data)
+      } catch (error) {
+        console.error('Failed to load struggling students:', error)
+        toast.error('Qiynalayotgan talabalar ma\'lumotini yuklashda xatolik yuz berdi')
+      } finally {
+        setLoading(false)
       }
-    ]
-    
-    setTimeout(() => {
-      setStrugglingStudents(mockData)
-      setLoading(false)
-    }, 800)
+    }
+
+    loadStrugglingStudents()
   }, [])
 
   const handleViewStudent = (studentId: number) => {

@@ -13,26 +13,8 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
-
-interface AnalyticsData {
-  total_groups: number
-  total_students: number
-  active_students: number
-  avg_completion_rate: number
-  completed_lessons: number
-  total_lessons: number
-}
-
-interface WeeklyReport {
-  week_summary: {
-    total_progress_records: number
-    daily_breakdown: Array<{
-      date: string
-      lessons_completed: number
-      active_students: number
-    }>
-  }
-}
+import { teacherApi, type AnalyticsData, type WeeklyReport } from '@/lib/api'
+import { toast } from 'sonner'
 
 export function Analytics() {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
@@ -40,53 +22,24 @@ export function Analytics() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const mockAnalytics: AnalyticsData = {
-      total_groups: 3,
-      total_students: 45,
-      active_students: 38,
-      avg_completion_rate: 67.5,
-      completed_lessons: 156,
-      total_lessons: 231
-    }
-
-    const mockWeeklyReport: WeeklyReport = {
-      week_summary: {
-        total_progress_records: 125,
-        daily_breakdown: [
-          {
-            date: "2024-01-15",
-            lessons_completed: 8,
-            active_students: 12
-          },
-          {
-            date: "2024-01-16", 
-            lessons_completed: 15,
-            active_students: 18
-          },
-          {
-            date: "2024-01-17",
-            lessons_completed: 22,
-            active_students: 25
-          },
-          {
-            date: "2024-01-18",
-            lessons_completed: 18,
-            active_students: 20
-          },
-          {
-            date: "2024-01-19",
-            lessons_completed: 14,
-            active_students: 16
-          }
-        ]
+    const loadAnalyticsData = async () => {
+      try {
+        setLoading(true)
+        const [analytics, weekly] = await Promise.all([
+          teacherApi.getAnalyticsOverview(),
+          teacherApi.getWeeklyReport()
+        ])
+        setAnalyticsData(analytics)
+        setWeeklyReport(weekly)
+      } catch (error) {
+        console.error('Failed to load analytics data:', error)
+        toast.error('Analitika ma\'lumotlarini yuklashda xatolik yuz berdi')
+      } finally {
+        setLoading(false)
       }
     }
-    
-    setTimeout(() => {
-      setAnalyticsData(mockAnalytics)
-      setWeeklyReport(mockWeeklyReport)
-      setLoading(false)
-    }, 900)
+
+    loadAnalyticsData()
   }, [])
 
   if (loading) {

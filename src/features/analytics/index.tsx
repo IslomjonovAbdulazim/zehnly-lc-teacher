@@ -1,0 +1,279 @@
+import { useEffect, useState } from 'react'
+import { BarChart3, Users, BookOpen, TrendingUp, Calendar } from 'lucide-react'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { ConfigDrawer } from '@/components/config-drawer'
+
+interface AnalyticsData {
+  total_groups: number
+  total_students: number
+  active_students: number
+  avg_completion_rate: number
+  completed_lessons: number
+  total_lessons: number
+}
+
+interface WeeklyReport {
+  week_summary: {
+    total_progress_records: number
+    daily_breakdown: Array<{
+      date: string
+      lessons_completed: number
+      active_students: number
+    }>
+  }
+}
+
+export function Analytics() {
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
+  const [weeklyReport, setWeeklyReport] = useState<WeeklyReport | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const mockAnalytics: AnalyticsData = {
+      total_groups: 3,
+      total_students: 45,
+      active_students: 38,
+      avg_completion_rate: 67.5,
+      completed_lessons: 156,
+      total_lessons: 231
+    }
+
+    const mockWeeklyReport: WeeklyReport = {
+      week_summary: {
+        total_progress_records: 125,
+        daily_breakdown: [
+          {
+            date: "2024-01-15",
+            lessons_completed: 8,
+            active_students: 12
+          },
+          {
+            date: "2024-01-16", 
+            lessons_completed: 15,
+            active_students: 18
+          },
+          {
+            date: "2024-01-17",
+            lessons_completed: 22,
+            active_students: 25
+          },
+          {
+            date: "2024-01-18",
+            lessons_completed: 18,
+            active_students: 20
+          },
+          {
+            date: "2024-01-19",
+            lessons_completed: 14,
+            active_students: 16
+          }
+        ]
+      }
+    }
+    
+    setTimeout(() => {
+      setAnalyticsData(mockAnalytics)
+      setWeeklyReport(mockWeeklyReport)
+      setLoading(false)
+    }, 900)
+  }, [])
+
+  if (loading) {
+    return (
+      <>
+        <Header>
+          <div className='ms-auto flex items-center space-x-4'>
+            <ThemeSwitch />
+            <ConfigDrawer />
+            <ProfileDropdown />
+          </div>
+        </Header>
+        <Main>
+          <div className='animate-pulse space-y-4'>
+            <div className='h-8 bg-gray-200 rounded w-1/4'></div>
+            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className='h-32 bg-gray-200 rounded'></div>
+              ))}
+            </div>
+          </div>
+        </Main>
+      </>
+    )
+  }
+
+  if (!analyticsData || !weeklyReport) return null
+
+  return (
+    <>
+      <Header>
+        <div className='ms-auto flex items-center space-x-4'>
+          <ThemeSwitch />
+          <ConfigDrawer />
+          <ProfileDropdown />
+        </div>
+      </Header>
+
+      <Main>
+        <div className='mb-6 space-y-2'>
+          <h1 className='text-3xl font-bold tracking-tight flex items-center'>
+            <BarChart3 className='h-8 w-8 mr-3' />
+            Analytics Overview
+          </h1>
+          <p className='text-muted-foreground'>Performance metrics for all your assigned groups</p>
+        </div>
+
+        <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6'>
+          <Card>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium'>Total Groups</CardTitle>
+              <Users className='h-4 w-4 text-muted-foreground' />
+            </CardHeader>
+            <CardContent>
+              <div className='text-2xl font-bold'>{analyticsData.total_groups}</div>
+              <p className='text-xs text-muted-foreground'>Assigned to you</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium'>Active Students</CardTitle>
+              <TrendingUp className='h-4 w-4 text-muted-foreground' />
+            </CardHeader>
+            <CardContent>
+              <div className='text-2xl font-bold'>{analyticsData.active_students}</div>
+              <p className='text-xs text-muted-foreground'>
+                of {analyticsData.total_students} total students
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium'>Completion Rate</CardTitle>
+              <BookOpen className='h-4 w-4 text-muted-foreground' />
+            </CardHeader>
+            <CardContent>
+              <div className='text-2xl font-bold'>{analyticsData.avg_completion_rate}%</div>
+              <p className='text-xs text-muted-foreground'>Average across all groups</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium'>Lessons Completed</CardTitle>
+              <Calendar className='h-4 w-4 text-muted-foreground' />
+            </CardHeader>
+            <CardContent>
+              <div className='text-2xl font-bold'>{analyticsData.completed_lessons}</div>
+              <p className='text-xs text-muted-foreground'>
+                of {analyticsData.total_lessons} total lessons
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className='grid gap-6 lg:grid-cols-2'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Weekly Activity Report</CardTitle>
+              <CardDescription>Daily breakdown of student engagement</CardDescription>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              <div className='flex justify-between items-center p-3 bg-muted rounded-lg'>
+                <span className='font-medium'>Total Progress Records</span>
+                <Badge variant='secondary'>{weeklyReport.week_summary.total_progress_records}</Badge>
+              </div>
+              
+              {weeklyReport.week_summary.daily_breakdown.map((day, index) => (
+                <div key={index} className='flex items-center justify-between p-4 border rounded-lg'>
+                  <div>
+                    <h4 className='font-medium'>{new Date(day.date).toLocaleDateString('en-US', { weekday: 'long' })}</h4>
+                    <p className='text-sm text-muted-foreground'>{day.date}</p>
+                  </div>
+                  <div className='text-right space-y-1'>
+                    <div className='flex items-center space-x-4'>
+                      <div className='text-center'>
+                        <div className='font-bold'>{day.lessons_completed}</div>
+                        <div className='text-xs text-muted-foreground'>Lessons</div>
+                      </div>
+                      <div className='text-center'>
+                        <div className='font-bold'>{day.active_students}</div>
+                        <div className='text-xs text-muted-foreground'>Active</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Performance Summary</CardTitle>
+              <CardDescription>Key metrics at a glance</CardDescription>
+            </CardHeader>
+            <CardContent className='space-y-6'>
+              <div className='space-y-3'>
+                <div className='flex justify-between items-center'>
+                  <span className='text-sm font-medium'>Student Engagement</span>
+                  <span className='text-sm'>{Math.round((analyticsData.active_students / analyticsData.total_students) * 100)}%</span>
+                </div>
+                <div className='w-full bg-gray-200 rounded-full h-2'>
+                  <div 
+                    className='bg-green-600 h-2 rounded-full transition-all'
+                    style={{ width: `${(analyticsData.active_students / analyticsData.total_students) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className='space-y-3'>
+                <div className='flex justify-between items-center'>
+                  <span className='text-sm font-medium'>Overall Progress</span>
+                  <span className='text-sm'>{Math.round((analyticsData.completed_lessons / analyticsData.total_lessons) * 100)}%</span>
+                </div>
+                <div className='w-full bg-gray-200 rounded-full h-2'>
+                  <div 
+                    className='bg-blue-600 h-2 rounded-full transition-all'
+                    style={{ width: `${(analyticsData.completed_lessons / analyticsData.total_lessons) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className='pt-4 space-y-2'>
+                <h4 className='font-medium'>This Week's Highlights</h4>
+                <div className='space-y-2'>
+                  <div className='flex justify-between text-sm'>
+                    <span>Best Day:</span>
+                    <span className='font-medium'>
+                      {weeklyReport.week_summary.daily_breakdown.reduce((prev, current) => 
+                        current.lessons_completed > prev.lessons_completed ? current : prev
+                      ).date}
+                    </span>
+                  </div>
+                  <div className='flex justify-between text-sm'>
+                    <span>Peak Activity:</span>
+                    <span className='font-medium'>
+                      {Math.max(...weeklyReport.week_summary.daily_breakdown.map(d => d.active_students))} students
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </Main>
+    </>
+  )
+}

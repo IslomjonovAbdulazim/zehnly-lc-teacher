@@ -55,9 +55,9 @@ export function ConfigDrawer() {
       </SheetTrigger>
       <SheetContent className='flex flex-col'>
         <SheetHeader className='pb-0 text-start'>
-          <SheetTitle>Theme Settings</SheetTitle>
+          <SheetTitle>Mavzu Sozlamalari</SheetTitle>
           <SheetDescription id='config-drawer-description'>
-            Adjust the appearance and layout to suit your preferences.
+            Ko`rinish va tartibni afzalliklaringizga moslang.
           </SheetDescription>
         </SheetHeader>
         <div className='space-y-6 overflow-y-auto px-4'>
@@ -72,7 +72,7 @@ export function ConfigDrawer() {
             onClick={handleReset}
             aria-label='Reset all settings to default values'
           >
-            Reset
+            Qayta Tiklash
           </Button>
         </SheetFooter>
       </SheetContent>

@@ -129,56 +129,56 @@ export function Analytics() {
         <div className='mb-6 space-y-2'>
           <h1 className='text-3xl font-bold tracking-tight flex items-center'>
             <BarChart3 className='h-8 w-8 mr-3' />
-            Analytics Overview
+            Analitika Ko'rinishi
           </h1>
-          <p className='text-muted-foreground'>Performance metrics for all your assigned groups</p>
+          <p className='text-muted-foreground'>Barcha tayinlangan guruhlar uchun samaradorlik ko`rsatkichlari</p>
         </div>
 
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6'>
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Total Groups</CardTitle>
+              <CardTitle className='text-sm font-medium'>Jami Guruhlar</CardTitle>
               <Users className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold'>{analyticsData.total_groups}</div>
-              <p className='text-xs text-muted-foreground'>Assigned to you</p>
+              <p className='text-xs text-muted-foreground'>Sizga tayinlangan</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Active Students</CardTitle>
+              <CardTitle className='text-sm font-medium'>Faol Talabalar</CardTitle>
               <TrendingUp className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold'>{analyticsData.active_students}</div>
               <p className='text-xs text-muted-foreground'>
-                of {analyticsData.total_students} total students
+                {analyticsData.total_students} talabadan
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Completion Rate</CardTitle>
+              <CardTitle className='text-sm font-medium'>Tugallash Darajasi</CardTitle>
               <BookOpen className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold'>{analyticsData.avg_completion_rate}%</div>
-              <p className='text-xs text-muted-foreground'>Average across all groups</p>
+              <p className='text-xs text-muted-foreground'>Barcha guruhlar bo'yicha o'rtacha</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Lessons Completed</CardTitle>
+              <CardTitle className='text-sm font-medium'>Tugallangan Darslar</CardTitle>
               <Calendar className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold'>{analyticsData.completed_lessons}</div>
               <p className='text-xs text-muted-foreground'>
-                of {analyticsData.total_lessons} total lessons
+                {analyticsData.total_lessons} darsdan
               </p>
             </CardContent>
           </Card>
@@ -187,12 +187,12 @@ export function Analytics() {
         <div className='grid gap-6 lg:grid-cols-2'>
           <Card>
             <CardHeader>
-              <CardTitle>Weekly Activity Report</CardTitle>
-              <CardDescription>Daily breakdown of student engagement</CardDescription>
+              <CardTitle>Haftalik Faoliyat Hisoboti</CardTitle>
+              <CardDescription>Talabalar faolligining kunlik taqsimoti</CardDescription>
             </CardHeader>
             <CardContent className='space-y-4'>
               <div className='flex justify-between items-center p-3 bg-muted rounded-lg'>
-                <span className='font-medium'>Total Progress Records</span>
+                <span className='font-medium'>Jami Muvaffaqiyat Yozuvlari</span>
                 <Badge variant='secondary'>{weeklyReport.week_summary.total_progress_records}</Badge>
               </div>
               
@@ -206,11 +206,11 @@ export function Analytics() {
                     <div className='flex items-center space-x-4'>
                       <div className='text-center'>
                         <div className='font-bold'>{day.lessons_completed}</div>
-                        <div className='text-xs text-muted-foreground'>Lessons</div>
+                        <div className='text-xs text-muted-foreground'>Darslar</div>
                       </div>
                       <div className='text-center'>
                         <div className='font-bold'>{day.active_students}</div>
-                        <div className='text-xs text-muted-foreground'>Active</div>
+                        <div className='text-xs text-muted-foreground'>Faol</div>
                       </div>
                     </div>
                   </div>
@@ -221,13 +221,13 @@ export function Analytics() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Performance Summary</CardTitle>
-              <CardDescription>Key metrics at a glance</CardDescription>
+              <CardTitle>Samaradorlik Xulosasi</CardTitle>
+              <CardDescription>Asosiy ko`rsatkichlar bir qarashda</CardDescription>
             </CardHeader>
             <CardContent className='space-y-6'>
               <div className='space-y-3'>
                 <div className='flex justify-between items-center'>
-                  <span className='text-sm font-medium'>Student Engagement</span>
+                  <span className='text-sm font-medium'>Talabalar Faolligi</span>
                   <span className='text-sm'>{Math.round((analyticsData.active_students / analyticsData.total_students) * 100)}%</span>
                 </div>
                 <div className='w-full bg-gray-200 rounded-full h-2'>
@@ -240,7 +240,7 @@ export function Analytics() {
 
               <div className='space-y-3'>
                 <div className='flex justify-between items-center'>
-                  <span className='text-sm font-medium'>Overall Progress</span>
+                  <span className='text-sm font-medium'>Umumiy Muvaffaqiyat</span>
                   <span className='text-sm'>{Math.round((analyticsData.completed_lessons / analyticsData.total_lessons) * 100)}%</span>
                 </div>
                 <div className='w-full bg-gray-200 rounded-full h-2'>
@@ -252,10 +252,10 @@ export function Analytics() {
               </div>
 
               <div className='pt-4 space-y-2'>
-                <h4 className='font-medium'>This Week's Highlights</h4>
+                <h4 className='font-medium'>Shu Haftaning Asosiy Voqealari</h4>
                 <div className='space-y-2'>
                   <div className='flex justify-between text-sm'>
-                    <span>Best Day:</span>
+                    <span>Eng Yaxshi Kun:</span>
                     <span className='font-medium'>
                       {weeklyReport.week_summary.daily_breakdown.reduce((prev, current) => 
                         current.lessons_completed > prev.lessons_completed ? current : prev
@@ -263,9 +263,9 @@ export function Analytics() {
                     </span>
                   </div>
                   <div className='flex justify-between text-sm'>
-                    <span>Peak Activity:</span>
+                    <span>Eng Yuqori Faollik:</span>
                     <span className='font-medium'>
-                      {Math.max(...weeklyReport.week_summary.daily_breakdown.map(d => d.active_students))} students
+                      {Math.max(...weeklyReport.week_summary.daily_breakdown.map(d => d.active_students))} talaba
                     </span>
                   </div>
                 </div>

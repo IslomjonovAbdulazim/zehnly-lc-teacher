@@ -18,10 +18,10 @@ import { PasswordInput } from '@/components/password-input'
 
 const profileFormSchema = z.object({
   full_name: z
-    .string('Please enter your full name.')
-    .min(2, 'Name must be at least 2 characters.')
-    .max(50, 'Name must not be longer than 50 characters.'),
-  email: z.string().email('Invalid email address'),
+    .string('Iltimos, to\'liq ismingizni kiriting.')
+    .min(2, 'Ism kamida 2 ta belgidan iborat bo\'lishi kerak.')
+    .max(50, 'Ism 50 ta belgidan oshmasligi kerak.'),
+  email: z.string().email('Noto\'g\'ri email manzil'),
   current_password: z.string().optional(),
   new_password: z.string().optional(),
   confirm_password: z.string().optional(),
@@ -34,7 +34,7 @@ const profileFormSchema = z.object({
   }
   return true
 }, {
-  message: "Passwords don't match or current password is required",
+  message: "Parollar mos kelmaydi yoki joriy parol talab qilinadi",
   path: ["confirm_password"],
 })
 
@@ -59,7 +59,7 @@ export function ProfileForm() {
     toast.promise(
       new Promise((resolve) => setTimeout(resolve, 1500)),
       {
-        loading: 'Updating profile...',
+        loading: 'Profil yangilanmoqda...',
         success: () => {
           setIsLoading(false)
           if (data.new_password) {
@@ -70,9 +70,9 @@ export function ProfileForm() {
               confirm_password: '',
             })
           }
-          return 'Profile updated successfully!'
+          return 'Profil muvaffaqiyatli yangilandi!'
         },
-        error: 'Failed to update profile',
+        error: 'Profilni yangilash amalga oshmadi',
       }
     )
   }
@@ -85,12 +85,12 @@ export function ProfileForm() {
           name='full_name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel>To'liq Ism</FormLabel>
               <FormControl>
-                <Input placeholder='Enter your full name' {...field} />
+                <Input placeholder='To`liq ismingizni kiriting' {...field} />
               </FormControl>
               <FormDescription>
-                Your display name visible to students and colleagues.
+                Talabalar va hamkasblaringizga ko`rinadigan ismingiz.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -107,7 +107,7 @@ export function ProfileForm() {
                 <Input {...field} disabled className='bg-gray-50' />
               </FormControl>
               <FormDescription>
-                Your email address cannot be changed. Contact your administrator if needed.
+                Email manzilingizni o`zgartirib bo`lmaydi. Kerak bo`lsa administratoringiz bilan bog`laning.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -115,9 +115,9 @@ export function ProfileForm() {
         />
 
         <div className='space-y-4 pt-4 border-t'>
-          <h3 className='text-lg font-medium'>Change Password</h3>
+          <h3 className='text-lg font-medium'>Parolni O`zgartirish</h3>
           <p className='text-sm text-muted-foreground'>
-            Leave password fields empty if you don't want to change your password.
+            Agar parolingizni o`zgartirmoqchi bo`lmasangiz, parol maydonlarini bo`sh qoldiring.
           </p>
           
           <FormField
@@ -125,9 +125,9 @@ export function ProfileForm() {
             name='current_password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Current Password</FormLabel>
+                <FormLabel>Joriy Parol</FormLabel>
                 <FormControl>
-                  <PasswordInput placeholder='Enter current password' {...field} />
+                  <PasswordInput placeholder='Joriy parolni kiriting' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -139,12 +139,12 @@ export function ProfileForm() {
             name='new_password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>New Password</FormLabel>
+                <FormLabel>Yangi Parol</FormLabel>
                 <FormControl>
-                  <PasswordInput placeholder='Enter new password' {...field} />
+                  <PasswordInput placeholder='Yangi parolni kiriting' {...field} />
                 </FormControl>
                 <FormDescription>
-                  Password must be at least 8 characters long.
+                  Parol kamida 8 ta belgidan iborat bo`lishi kerak.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -156,9 +156,9 @@ export function ProfileForm() {
             name='confirm_password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirm New Password</FormLabel>
+                <FormLabel>Yangi Parolni Tasdiqlash</FormLabel>
                 <FormControl>
-                  <PasswordInput placeholder='Confirm new password' {...field} />
+                  <PasswordInput placeholder='Yangi parolni tasdiqlang' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -167,7 +167,7 @@ export function ProfileForm() {
         </div>
 
         <Button type='submit' disabled={isLoading}>
-          {isLoading ? 'Updating...' : 'Update Profile'}
+          {isLoading ? 'Yangilanmoqda...' : 'Profilni Yangilash'}
         </Button>
       </form>
     </Form>

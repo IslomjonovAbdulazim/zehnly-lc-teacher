@@ -100,8 +100,8 @@ export function Groups() {
 
       <Main>
         <div className='mb-6 space-y-2'>
-          <h1 className='text-3xl font-bold tracking-tight'>My Groups</h1>
-          <p className='text-muted-foreground'>Manage your assigned learning groups and track student progress</p>
+          <h1 className='text-3xl font-bold tracking-tight'>Mening Guruhlarim</h1>
+          <p className='text-muted-foreground'>Tayinlangan o'quv guruhlarini boshqaring va talabalar muvaffaqiyatini kuzating</p>
         </div>
 
         <div className='grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
@@ -111,17 +111,17 @@ export function Groups() {
                 <div className='flex items-center justify-between'>
                   <CardTitle className='text-lg'>{group.name}</CardTitle>
                   <Badge variant='secondary'>
-                    Course {group.course_id}
+                    {group.course_id}-kurs
                   </Badge>
                 </div>
                 <CardDescription>
-                  Created {new Date(group.created_at).toLocaleDateString()}
+                  Yaratilgan {new Date(group.created_at).toLocaleDateString()}
                 </CardDescription>
               </CardHeader>
               <CardContent className='space-y-4'>
                 <div className='flex items-center space-x-2'>
                   <Users className='h-4 w-4 text-muted-foreground' />
-                  <span className='text-sm font-medium'>{group.student_count} students</span>
+                  <span className='text-sm font-medium'>{group.student_count} talaba</span>
                 </div>
                 
                 <div className='flex space-x-2'>
@@ -131,7 +131,7 @@ export function Groups() {
                     size='sm'
                   >
                     <Eye className='h-4 w-4 mr-2' />
-                    View Students
+                    Talabalarni Ko'rish
                   </Button>
                   <Button 
                     onClick={() => handleViewGroup(group.id)}
@@ -150,8 +150,8 @@ export function Groups() {
           <Card className='text-center py-12'>
             <CardContent>
               <Users className='h-12 w-12 text-muted-foreground mx-auto mb-4' />
-              <h3 className='text-lg font-medium mb-2'>No Groups Assigned</h3>
-              <p className='text-muted-foreground'>You don't have any groups assigned yet. Contact your administrator to get started.</p>
+              <h3 className='text-lg font-medium mb-2'>Guruh Tayinlanmagan</h3>
+              <p className='text-muted-foreground'>Sizga hali hech qanday guruh tayinlanmagan. Boshlash uchun administratoringiz bilan bog'laning.</p>
             </CardContent>
           </Card>
         )}

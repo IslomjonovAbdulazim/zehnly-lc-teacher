@@ -40,13 +40,13 @@ export function ProfileDropdown() {
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <Link to='/settings'>
-                Settings
+                Sozlamalar
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setOpen(true)}>
-            Sign out
+            Chiqish
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -37,7 +37,7 @@ export function StrugglingStudents() {
           id: 8,
           full_name: "Mike Wilson"
         },
-        reason: "No progress recorded",
+        reason: "Ma'lumot yo'q",
         avg_percentage: 0
       },
       {
@@ -45,7 +45,7 @@ export function StrugglingStudents() {
           id: 9,
           full_name: "Lisa Chen"
         },
-        reason: "Low completion rate",
+        reason: "Past tugallanish darajasi",
         avg_percentage: 35.5
       },
       {
@@ -53,7 +53,7 @@ export function StrugglingStudents() {
           id: 10,
           full_name: "David Brown"
         },
-        reason: "No recent activity",
+        reason: "So'nggi faoliyat yo'q",
         avg_percentage: 68.2
       },
       {
@@ -61,7 +61,7 @@ export function StrugglingStudents() {
           id: 11,
           full_name: "Emma Davis"
         },
-        reason: "Low completion rate",
+        reason: "Past tugallanish darajasi",
         avg_percentage: 42.8
       }
     ]
@@ -78,11 +78,11 @@ export function StrugglingStudents() {
 
   const getReasonBadgeVariant = (reason: string) => {
     switch (reason) {
-      case 'No progress recorded':
+      case 'Ma\'lumot yo\'q':
         return 'destructive'
-      case 'Low completion rate':
+      case 'Past tugallanish darajasi':
         return 'secondary'
-      case 'No recent activity':
+      case 'So\'nggi faoliyat yo\'q':
         return 'outline'
       default:
         return 'secondary'
@@ -133,9 +133,9 @@ export function StrugglingStudents() {
         <div className='mb-6 space-y-2'>
           <h1 className='text-3xl font-bold tracking-tight flex items-center'>
             <TrendingDown className='h-8 w-8 mr-3 text-red-500' />
-            Struggling Students
+            Qiynalayotgan Talabalar
           </h1>
-          <p className='text-muted-foreground'>Students who need extra attention and support</p>
+          <p className='text-muted-foreground'>Qo'shimcha e'tibor va yordam kerak bo'lgan talabalar</p>
         </div>
 
         <div className='mb-6'>
@@ -143,22 +143,22 @@ export function StrugglingStudents() {
             <CardHeader>
               <CardTitle className='flex items-center'>
                 <AlertTriangle className='h-5 w-5 mr-2 text-orange-500' />
-                Summary
+                Xulosa
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className='grid gap-4 sm:grid-cols-3'>
                 <div className='text-center p-4 border rounded-lg'>
-                  <div className='text-2xl font-bold text-red-600'>{strugglingStudents.filter(s => s.reason === 'No progress recorded').length}</div>
-                  <p className='text-sm text-muted-foreground'>No Progress</p>
+                  <div className='text-2xl font-bold text-red-600'>{strugglingStudents.filter(s => s.reason === 'Ma\'lumot yo\'q').length}</div>
+                  <p className='text-sm text-muted-foreground'>Ma'lumot yo'q</p>
                 </div>
                 <div className='text-center p-4 border rounded-lg'>
                   <div className='text-2xl font-bold text-orange-600'>{strugglingStudents.filter(s => s.reason === 'Low completion rate').length}</div>
-                  <p className='text-sm text-muted-foreground'>Low Completion</p>
+                  <p className='text-sm text-muted-foreground'>Past tugallanish</p>
                 </div>
                 <div className='text-center p-4 border rounded-lg'>
                   <div className='text-2xl font-bold text-yellow-600'>{strugglingStudents.filter(s => s.reason === 'No recent activity').length}</div>
-                  <p className='text-sm text-muted-foreground'>Inactive</p>
+                  <p className='text-sm text-muted-foreground'>Faol emas</p>
                 </div>
               </div>
             </CardContent>
@@ -189,7 +189,7 @@ export function StrugglingStudents() {
                       <div className={`text-2xl font-bold ${getPercentageColor(student.avg_percentage)}`}>
                         {student.avg_percentage === 0 ? 'N/A' : `${student.avg_percentage}%`}
                       </div>
-                      <div className='text-xs text-muted-foreground'>Performance</div>
+                      <div className='text-xs text-muted-foreground'>Samaradorlik</div>
                     </div>
                     
                     <Button 
@@ -198,33 +198,33 @@ export function StrugglingStudents() {
                       className='flex-shrink-0'
                     >
                       <Eye className='h-4 w-4 sm:mr-2' />
-                      <span className='hidden sm:inline'>View Details</span>
+                      <span className='hidden sm:inline'>Batafsil</span>
                     </Button>
                   </div>
                 </div>
 
                 <div className='mt-4 p-3 bg-muted rounded-lg'>
-                  <h4 className='font-medium text-sm mb-2'>Recommended Actions:</h4>
+                  <h4 className='font-medium text-sm mb-2'>Tavsiya Etilgan Harakatlar:</h4>
                   <ul className='text-sm text-muted-foreground space-y-1'>
-                    {student.reason === 'No progress recorded' && (
+                    {student.reason === 'Ma\'lumot yo\'q' && (
                       <>
-                        <li>• Check if student has login issues</li>
-                        <li>• Schedule one-on-one session</li>
-                        <li>• Review course material accessibility</li>
+                        <li>• Talabaning kirish muammolari borligini tekshiring</li>
+                        <li>• Shaxsiy uchrashuvni rejalashtiring</li>
+                        <li>• Kurs materiallarining mavjudligini ko`rib chiqing</li>
                       </>
                     )}
-                    {student.reason === 'Low completion rate' && (
+                    {student.reason === 'Past tugallanish darajasi' && (
                       <>
-                        <li>• Review weak words and problem areas</li>
-                        <li>• Provide additional practice materials</li>
-                        <li>• Consider adjusting difficulty level</li>
+                        <li>• Zaif so`zlar va muammoli joylarni ko`rib chiqing</li>
+                        <li>• Qo'shimcha mashq materiallarini taqdim eting</li>
+                        <li>• Qiyinchilik darajasini o`zgartirishni o`ylab ko`ring</li>
                       </>
                     )}
-                    {student.reason === 'No recent activity' && (
+                    {student.reason === 'So\'nggi faoliyat yo\'q' && (
                       <>
-                        <li>• Send reminder to continue lessons</li>
-                        <li>• Check for external factors affecting attendance</li>
-                        <li>• Motivate with progress achievements</li>
+                        <li>• Darslarni davom ettirishni eslatma yuboring</li>
+                        <li>• Qatnashuvga ta'sir qiluvchi tashqi omillarni tekshiring</li>
+                        <li>• Muvaffaqiyatlar bilan motivatsiya bering</li>
                       </>
                     )}
                   </ul>
@@ -238,8 +238,8 @@ export function StrugglingStudents() {
           <Card className='text-center py-12'>
             <CardContent>
               <TrendingUp className='h-12 w-12 text-green-500 mx-auto mb-4' />
-              <h3 className='text-lg font-medium mb-2'>Great Job!</h3>
-              <p className='text-muted-foreground'>No students are currently struggling. All your students are making good progress!</p>
+              <h3 className='text-lg font-medium mb-2'>Ajoyib!</h3>
+              <p className='text-muted-foreground'>Hozirda hech qanday talaba qiynalmayapti. Barcha talabalaringiz yaxshi muvaffaqiyat qilmoqda!</p>
             </CardContent>
           </Card>
         )}

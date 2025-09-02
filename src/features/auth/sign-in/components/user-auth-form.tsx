@@ -21,12 +21,12 @@ import { PasswordInput } from '@/components/password-input'
 
 const formSchema = z.object({
   email: z.email({
-    error: (iss) => (iss.input === '' ? 'Please enter your email' : undefined),
+    error: (iss) => (iss.input === '' ? 'Iltimos, emailingizni kiriting' : undefined),
   }),
   password: z
     .string()
-    .min(1, 'Please enter your password')
-    .min(7, 'Password must be at least 7 characters long'),
+    .min(1, 'Iltimos, parolingizni kiriting')
+    .min(7, 'Parol kamida 7 ta belgidan iborat bo\'lishi kerak'),
 })
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
@@ -62,7 +62,7 @@ export function UserAuthForm({
     }
 
     toast.promise(sleep(2000), {
-      loading: 'Signing in...',
+      loading: 'Kirilmoqda...',
       success: () => {
         setIsLoading(false)
 
@@ -74,9 +74,9 @@ export function UserAuthForm({
         const targetPath = redirectTo || '/'
         navigate({ to: targetPath, replace: true })
 
-        return `Welcome back, ${data.email}!`
+        return `Xush kelibsiz, ${data.email}!`
       },
-      error: 'Error',
+      error: 'Xato',
     })
   }
 
@@ -94,7 +94,7 @@ export function UserAuthForm({
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input placeholder='ism@example.com' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -105,7 +105,7 @@ export function UserAuthForm({
           name='password'
           render={({ field }) => (
             <FormItem className='relative'>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Parol</FormLabel>
               <FormControl>
                 <PasswordInput placeholder='********' {...field} />
               </FormControl>
@@ -115,7 +115,7 @@ export function UserAuthForm({
         />
         <Button className='mt-2' disabled={isLoading}>
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
-          Sign in
+          Kirish
         </Button>
 
       </form>

@@ -16,42 +16,42 @@ export const sidebarData: SidebarData = {
   },
   teams: [
     {
-      name: 'Teacher Portal',
+      name: 'O\'qituvchi Portali',
       logo: GraduationCap,
-      plan: 'Learning Center',
+      plan: 'O\'quv Markazi',
     },
   ],
   navGroups: [
     {
-      title: 'Teaching',
+      title: 'O\'qitish',
       items: [
         {
-          title: 'Dashboard',
+          title: 'Boshqaruv Paneli',
           url: '/',
           icon: LayoutDashboard,
         },
         {
-          title: 'Groups',
+          title: 'Guruhlar',
           url: '/groups',
           icon: Users,
         },
         {
-          title: 'Analytics',
+          title: 'Analitika',
           url: '/analytics',
           icon: BarChart3,
         },
         {
-          title: 'Struggling Students',
+          title: 'Qiynalayotgan Talabalar',
           url: '/struggling',
           icon: TrendingDown,
         },
       ],
     },
     {
-      title: 'Settings',
+      title: 'Sozlamalar',
       items: [
         {
-          title: 'Settings',
+          title: 'Sozlamalar',
           url: '/settings',
           icon: Settings,
         },

@@ -163,7 +163,7 @@ export function GroupDetail() {
           className='mr-4'
         >
           <ArrowLeft className='h-4 w-4 mr-2' />
-          Back to Groups
+          Guruhlarga Qaytish
         </Button>
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
@@ -175,18 +175,18 @@ export function GroupDetail() {
       <Main>
         <div className='mb-6 space-y-2'>
           <h1 className='text-3xl font-bold tracking-tight'>{groupData.group.name}</h1>
-          <p className='text-muted-foreground'>Course {groupData.group.course_id} • {groupData.students.length} students</p>
+          <p className='text-muted-foreground'>{groupData.group.course_id}-kurs • {groupData.students.length} talaba</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className='space-y-6'>
           <TabsList>
             <TabsTrigger value='leaderboard'>
               <Trophy className='h-4 w-4 mr-2' />
-              Leaderboard
+              Reyting
             </TabsTrigger>
             <TabsTrigger value='students'>
               <Users className='h-4 w-4 mr-2' />
-              Students
+              Talabalar
             </TabsTrigger>
           </TabsList>
 
@@ -204,7 +204,7 @@ export function GroupDetail() {
                       <div>
                         <h3 className='font-medium text-lg'>{student.profile.full_name}</h3>
                         <p className='text-sm text-muted-foreground'>
-                          Rank #{student.rank} • Joined {new Date(student.profile.created_at).toLocaleDateString()}
+                          #{student.rank}-o'rin • Qo'shilgan {new Date(student.profile.created_at).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
@@ -212,12 +212,12 @@ export function GroupDetail() {
                     <div className='flex items-center space-x-6'>
                       <div className='text-center'>
                         <div className='text-2xl font-bold'>{student.progress.completed_lessons}</div>
-                        <div className='text-xs text-muted-foreground'>/ {student.progress.total_lessons} lessons</div>
+                        <div className='text-xs text-muted-foreground'>/ {student.progress.total_lessons} dars</div>
                       </div>
                       
                       <div className='text-center'>
                         <div className='text-2xl font-bold'>{Math.round(student.progress.average_percentage)}%</div>
-                        <div className='text-xs text-muted-foreground'>avg score</div>
+                        <div className='text-xs text-muted-foreground'>o'rtacha ball</div>
                       </div>
                       
                       <div className='text-center flex items-center'>
@@ -230,14 +230,14 @@ export function GroupDetail() {
                         onClick={() => handleStudentClick(student.profile.id)}
                       >
                         <Eye className='h-4 w-4 mr-2' />
-                        View Progress
+                        Batafsil
                       </Button>
                     </div>
                   </div>
                   
                   <div className='mt-4'>
                     <div className='flex justify-between text-sm mb-2'>
-                      <span>Progress</span>
+                      <span>Muvaffaqiyat</span>
                       <span>{Math.round((student.progress.completed_lessons / student.progress.total_lessons) * 100)}%</span>
                     </div>
                     <div className='w-full bg-gray-200 rounded-full h-2'>
@@ -257,9 +257,9 @@ export function GroupDetail() {
               <CardHeader>
                 <CardTitle className='flex items-center'>
                   <Trophy className='h-5 w-5 mr-2 text-yellow-500' />
-                  Group Leaderboard
+                  Guruh Reytingi
                 </CardTitle>
-                <CardDescription>Top performers by total coins earned</CardDescription>
+                <CardDescription>Eng ko`p tanga yig`gan talabalar</CardDescription>
               </CardHeader>
               <CardContent className='space-y-4'>
                 {leaderboard.map((entry) => (
@@ -278,7 +278,7 @@ export function GroupDetail() {
                       </Avatar>
                       <div>
                         <h4 className='font-medium'>{entry.full_name}</h4>
-                        <p className='text-sm text-muted-foreground'>Rank #{entry.rank}</p>
+                        <p className='text-sm text-muted-foreground'>#{entry.rank}-o'rin</p>
                       </div>
                     </div>
                     

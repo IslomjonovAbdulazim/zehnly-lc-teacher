@@ -10,12 +10,12 @@ import { SidebarNav } from './components/sidebar-nav'
 
 const sidebarNavItems = [
   {
-    title: 'Profile',
+    title: 'Profil',
     href: '/settings',
     icon: <UserCog size={18} />,
   },
   {
-    title: 'Appearance',
+    title: 'Ko\'rinish',
     href: '/settings/appearance',
     icon: <Palette size={18} />,
   },
@@ -36,10 +36,10 @@ export function Settings() {
       <Main fixed>
         <div className='space-y-0.5'>
           <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
-            Settings
+            Sozlamalar
           </h1>
           <p className='text-muted-foreground'>
-            Manage your account settings and set e-mail preferences.
+            Hisob sozlamalarini boshqaring va email afzalliklarini o'rnating.
           </p>
         </div>
         <Separator className='my-4 lg:my-6' />

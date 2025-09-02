@@ -166,7 +166,7 @@ export function StudentProgress() {
           className='mr-4'
         >
           <ArrowLeft className='h-4 w-4 mr-2' />
-          Back to Groups
+          Guruhlarga Qaytish
         </Button>
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
@@ -186,7 +186,7 @@ export function StudentProgress() {
             <div>
               <h1 className='text-3xl font-bold tracking-tight'>{studentData.student.full_name}</h1>
               <p className='text-muted-foreground'>
-                Student since {new Date(studentData.student.created_at).toLocaleDateString()}
+                Talaba bo'lgan vaqt {new Date(studentData.student.created_at).toLocaleDateString()}
               </p>
             </div>
           </div>
@@ -195,35 +195,35 @@ export function StudentProgress() {
         <div className='grid gap-6 lg:grid-cols-3 mb-6'>
           <Card>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-sm font-medium'>Lesson Progress</CardTitle>
+              <CardTitle className='text-sm font-medium'>Dars Muvaffaqiyati</CardTitle>
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold mb-2'>
                 {studentData.progress.filter(p => p.completed).length} / {studentData.progress.length}
               </div>
-              <p className='text-xs text-muted-foreground'>Lessons completed</p>
+              <p className='text-xs text-muted-foreground'>Tugallangan darslar</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-sm font-medium'>Average Score</CardTitle>
+              <CardTitle className='text-sm font-medium'>O'rtacha Ball</CardTitle>
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold mb-2'>
                 {Math.round(studentData.progress.reduce((acc, curr) => acc + curr.percentage, 0) / studentData.progress.length)}%
               </div>
-              <p className='text-xs text-muted-foreground'>Across all lessons</p>
+              <p className='text-xs text-muted-foreground'>Barcha darslar bo'yicha</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-sm font-medium'>Weak Words</CardTitle>
+              <CardTitle className='text-sm font-medium'>Zaif So'zlar</CardTitle>
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold mb-2'>{studentData.weak_words.length}</div>
-              <p className='text-xs text-muted-foreground'>Need attention</p>
+              <p className='text-xs text-muted-foreground'>Diqqat talab qiladi</p>
             </CardContent>
           </Card>
         </div>
@@ -233,23 +233,23 @@ export function StudentProgress() {
             <CardHeader>
               <CardTitle className='flex items-center'>
                 <BookOpen className='h-5 w-5 mr-2' />
-                Lesson Progress
+                Dars Muvaffaqiyati
               </CardTitle>
-              <CardDescription>Individual lesson performance</CardDescription>
+              <CardDescription>Har bir dars bo'yicha natijalar</CardDescription>
             </CardHeader>
             <CardContent className='space-y-4'>
               {studentData.progress.map((lesson) => (
                 <div key={lesson.lesson_id} className='flex items-center justify-between p-4 border rounded-lg'>
                   <div>
-                    <h4 className='font-medium'>Lesson {lesson.lesson_id}</h4>
+                    <h4 className='font-medium'>{lesson.lesson_id}-dars</h4>
                     <p className='text-sm text-muted-foreground'>
-                      Last practiced: {new Date(lesson.last_practiced).toLocaleDateString()}
+                      So'nggi mashq: {new Date(lesson.last_practiced).toLocaleDateString()}
                     </p>
                   </div>
                   <div className='text-right space-y-1'>
                     <div className='text-lg font-bold'>{lesson.percentage}%</div>
                     <Badge variant={lesson.completed ? 'default' : 'secondary'}>
-                      {lesson.completed ? 'Completed' : 'In Progress'}
+                      {lesson.completed ? 'Tugallangan' : 'Jarayonda'}
                     </Badge>
                   </div>
                 </div>
@@ -261,9 +261,9 @@ export function StudentProgress() {
             <CardHeader>
               <CardTitle className='flex items-center'>
                 <TrendingDown className='h-5 w-5 mr-2 text-red-500' />
-                Weak Words
+                Zaif So'zlar
               </CardTitle>
-              <CardDescription>Words that need more practice</CardDescription>
+              <CardDescription>Ko'proq mashq talab qiladigan so'zlar</CardDescription>
             </CardHeader>
             <CardContent className='space-y-4'>
               {studentData.weak_words.map((word) => (
@@ -274,17 +274,17 @@ export function StudentProgress() {
                       <p className='text-sm text-muted-foreground'>{word.meaning}</p>
                     </div>
                     <Badge variant='outline'>
-                      {getAccuracyRate(word.total_correct, word.total_attempts)}% accuracy
+                      {getAccuracyRate(word.total_correct, word.total_attempts)}% aniqlik
                     </Badge>
                   </div>
                   
                   <div className='space-y-2'>
-                    <p className='text-xs text-muted-foreground'>Last 7 attempts:</p>
+                    <p className='text-xs text-muted-foreground'>So'nggi 7 ta urinish:</p>
                     <div className='flex space-x-1'>
                       {getAttemptsVisual(word.last_seven_attempts)}
                     </div>
                     <p className='text-xs text-muted-foreground'>
-                      {word.total_correct} correct out of {word.total_attempts} total attempts
+                      {word.total_attempts} urinishdan {word.total_correct} ta to'g'ri
                     </p>
                   </div>
                 </div>
@@ -297,9 +297,9 @@ export function StudentProgress() {
           <CardHeader>
             <CardTitle className='flex items-center'>
               <Calendar className='h-5 w-5 mr-2' />
-              Recent Activity
+              So'nggi Faoliyat
             </CardTitle>
-            <CardDescription>Points earned from various activities</CardDescription>
+            <CardDescription>Turli faoliyatlardan olingan ballar</CardDescription>
           </CardHeader>
           <CardContent className='space-y-3'>
             {studentData.recent_activity.map((activity, index) => (
@@ -313,7 +313,7 @@ export function StudentProgress() {
                     </p>
                   </div>
                 </div>
-                <Badge variant='outline'>+{activity.amount} points</Badge>
+                <Badge variant='outline'>+{activity.amount} ball</Badge>
               </div>
             ))}
           </CardContent>

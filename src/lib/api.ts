@@ -290,7 +290,7 @@ export const contentApi = {
 
   getLessonWords: async (lessonId: number): Promise<Word[]> => {
     console.log('Fetching lesson words for:', lessonId)
-    const response = await contentApiInstance.get<ApiResponse<Word[]>>(`/content/lessons/${lessonId}/words`)
+    const response = await contentApiInstance.get<ApiResponse<Word[]>>(`/api/content/lessons/${lessonId}/words`)
     console.log('Lesson words response:', response.data)
     return response.data.data
   },

@@ -16,33 +16,28 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { contentApi, type Course } from '@/lib/api'
+import { useAuthStore } from '@/stores/auth-store'
 import { toast } from 'sonner'
 
 export function Content() {
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
+  const { auth } = useAuthStore()
 
   useEffect(() => {
     const loadCourses = async () => {
       try {
         setLoading(true)
         console.log('Starting to load courses...')
-        // Try different center IDs or get from teacher data
-        let data: Course[] = []
         
-        // Try center_id 1 first
-        try {
-          data = await contentApi.getCourses(1)
-          console.log('Loaded courses:', data)
-        } catch (error: any) {
-          console.log('Center 1 failed, trying center 2:', error.response?.data)
-          if (error.response?.status !== 404) throw error
-          
-          // Try center_id 2 if 1 fails
-          data = await contentApi.getCourses(2)
+        const centerId = auth.centerId
+        if (!centerId) {
+          throw new Error('Center ID not found in user data')
         }
         
+        const data = await contentApi.getCourses(centerId)
+        console.log('Loaded courses:', data)
         setCourses(data)
       } catch (error: any) {
         console.error('Failed to load courses:', error)
@@ -55,7 +50,7 @@ export function Content() {
     }
 
     loadCourses()
-  }, [])
+  }, [auth.centerId])
 
   const handleViewCourse = (courseId: number) => {
     navigate({ to: `/content/courses/${courseId}` })

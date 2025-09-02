@@ -60,8 +60,9 @@ export function UserAuthForm({
         password: data.password
       })
 
-      // Set the access token first
+      // Set the access token and center_id first
       auth.setAccessToken(loginResponse.access_token)
+      auth.setCenterId(loginResponse.center_id)
 
       // Now get teacher details using the token
       const dashboardData = await teacherApi.getDashboard()
@@ -72,7 +73,8 @@ export function UserAuthForm({
         email: data.email,
         role: ['teacher'],
         exp: Date.now() + (loginResponse.expires_in * 1000),
-        full_name: dashboardData.teacher.full_name
+        full_name: dashboardData.teacher.full_name,
+        center_id: loginResponse.center_id
       }
       
       auth.setUser(user)

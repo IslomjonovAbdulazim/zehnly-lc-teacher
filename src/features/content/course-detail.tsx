@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, BookOpen, GraduationCap, FileText, Hash } from 'lucide-react'
+import { ArrowLeft, BookOpen, GraduationCap, FileText, Hash, Eye } from 'lucide-react'
 import {
   Card,
   CardContent,

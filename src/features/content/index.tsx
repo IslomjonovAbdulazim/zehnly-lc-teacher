@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { BookOpen, Eye, Calendar, Users } from 'lucide-react'
+import { BookOpen, Eye, Calendar } from 'lucide-react'
 import {
   Card,
   CardContent,

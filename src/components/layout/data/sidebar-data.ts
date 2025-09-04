@@ -1,9 +1,6 @@
 import {
-  LayoutDashboard,
   Users,
-  BarChart3,
   GraduationCap,
-  TrendingDown,
   Settings,
   BookOpen,
 } from 'lucide-react'

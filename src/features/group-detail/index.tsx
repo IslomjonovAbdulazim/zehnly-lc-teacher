@@ -1,31 +1,24 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
-import { Users, Trophy, Eye, ArrowLeft, Medal, Coins } from 'lucide-react'
+import { Eye, ArrowLeft, Coins } from 'lucide-react'
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
-import { teacherApi, type GroupDetail, type LeaderboardEntry } from '@/lib/api'
+import { teacherApi, type GroupDetail } from '@/lib/api'
 import { toast } from 'sonner'
 
 export function GroupDetail() {
   const { groupId } = useParams({ strict: false })
   const navigate = useNavigate()
   const [groupData, setGroupData] = useState<GroupDetail | null>(null)
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('students')
 
   useEffect(() => {
     const loadGroupData = async () => {
@@ -33,12 +26,8 @@ export function GroupDetail() {
       
       try {
         setLoading(true)
-        const [groupStudentsData, leaderboardData] = await Promise.all([
-          teacherApi.getGroupStudents(parseInt(groupId)),
-          teacherApi.getGroupLeaderboard(parseInt(groupId))
-        ])
+        const groupStudentsData = await teacherApi.getGroupStudents(parseInt(groupId))
         setGroupData(groupStudentsData)
-        setLeaderboard(leaderboardData.leaderboard)
       } catch (error) {
         console.error('Failed to load group data:', error)
         toast.error('Guruh ma\'lumotlarini yuklashda xatolik yuz berdi')

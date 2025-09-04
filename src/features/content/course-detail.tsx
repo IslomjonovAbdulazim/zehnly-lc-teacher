@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, BookOpen, GraduationCap, FileText, Hash, Eye } from 'lucide-react'
+import { ArrowLeft, BookOpen, GraduationCap, Eye, FileText } from 'lucide-react'
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
@@ -24,8 +20,6 @@ export function CourseDetail() {
   const navigate = useNavigate()
   const [courseData, setCourseData] = useState<CourseDetail | null>(null)
   const [loading, setLoading] = useState(true)
-  const [openModules, setOpenModules] = useState<Set<number>>(new Set())
-
   useEffect(() => {
     const loadCourseDetail = async () => {
       if (!courseId) return
@@ -34,10 +28,6 @@ export function CourseDetail() {
         setLoading(true)
         const data = await contentApi.getCourseDetail(parseInt(courseId))
         setCourseData(data)
-        // Open first module by default
-        if (data.modules.length > 0) {
-          setOpenModules(new Set([data.modules[0].id]))
-        }
       } catch (error) {
         console.error('Failed to load course detail:', error)
         toast.error('Kurs tafsilotlarini yuklashda xatolik yuz berdi')
@@ -48,16 +38,6 @@ export function CourseDetail() {
 
     loadCourseDetail()
   }, [courseId])
-
-  const toggleModule = (moduleId: number) => {
-    const newOpenModules = new Set(openModules)
-    if (newOpenModules.has(moduleId)) {
-      newOpenModules.delete(moduleId)
-    } else {
-      newOpenModules.add(moduleId)
-    }
-    setOpenModules(newOpenModules)
-  }
 
   const handleViewLesson = (lessonId: number) => {
     navigate({ to: `/content/lessons/${lessonId}` })

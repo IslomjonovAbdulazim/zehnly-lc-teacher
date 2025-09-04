@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, Volume2, Image, FileText, Hash } from 'lucide-react'
+import { ArrowLeft, Volume2, Image, Hash } from 'lucide-react'
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'

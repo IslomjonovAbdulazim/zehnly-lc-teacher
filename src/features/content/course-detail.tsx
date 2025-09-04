@@ -134,67 +134,38 @@ export function CourseDetail() {
 
         <div className='space-y-4'>
           {courseData.modules.map((module) => (
-            <Card key={module.id}>
-              <Collapsible
-                open={openModules.has(module.id)}
-                onOpenChange={() => toggleModule(module.id)}
-              >
-                <CollapsibleTrigger asChild>
-                  <CardHeader className='cursor-pointer hover:bg-muted/50 transition-colors'>
-                    <div className='flex items-center justify-between'>
-                      <div className='flex items-center space-x-3'>
-                        <Badge variant='secondary'>#{module.order_index}</Badge>
-                        <div>
-                          <CardTitle className='text-lg'>{module.title}</CardTitle>
-                          <CardDescription>{module.description}</CardDescription>
+            <div key={module.id} className='space-y-2'>
+              <Card>
+                <CardContent className='px-3 py-0'>
+                  <div className='flex items-center justify-between'>
+                    <span className='font-semibold text-base'>{module.title}</span>
+                    <Badge variant='outline' className='text-xs'>{module.lessons.length} dars</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <div className='ml-8 space-y-1'>
+                {module.lessons.map((lesson) => (
+                  <Card key={lesson.id} className='hover:bg-accent/50'>
+                    <CardContent className='px-3 py-0'>
+                      <div className='flex items-center justify-between'>
+                        <div className='flex items-center space-x-3'>
+                          <span className='font-medium'>{lesson.title}</span>
+                          <span className='text-sm text-muted-foreground'>({lesson.word_count} so'z)</span>
                         </div>
-                      </div>
-                      <Badge variant='outline'>
-                        {module.lessons.length} dars
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                </CollapsibleTrigger>
-                
-                <CollapsibleContent>
-                  <CardContent className='pt-0'>
-                    <div className='space-y-3'>
-                      {module.lessons.map((lesson) => (
-                        <div 
-                          key={lesson.id}
-                          className='flex items-center justify-between p-4 border rounded-lg hover:bg-muted/30 transition-colors'
+                        <Button
+                          size='sm'
+                          onClick={() => handleViewLesson(lesson.id)}
                         >
-                          <div className='flex items-center space-x-3'>
-                            <Badge variant='outline' size='sm'>
-                              {lesson.order_index}
-                            </Badge>
-                            <div>
-                              <h4 className='font-medium'>{lesson.title}</h4>
-                              <p className='text-sm text-muted-foreground'>{lesson.description}</p>
-                            </div>
-                          </div>
-                          
-                          <div className='flex items-center space-x-3'>
-                            <div className='flex items-center space-x-1 text-sm text-muted-foreground'>
-                              <Hash className='h-3 w-3' />
-                              <span>{lesson.word_count} so'z</span>
-                            </div>
-                            <Button 
-                              size='sm'
-                              variant='outline'
-                              onClick={() => handleViewLesson(lesson.id)}
-                            >
-                              <Eye className='h-3 w-3 mr-1' />
-                              So'zlar
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </CollapsibleContent>
-              </Collapsible>
-            </Card>
+                          <Eye className='h-4 w-4 mr-2' />
+                          So'zlar
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 

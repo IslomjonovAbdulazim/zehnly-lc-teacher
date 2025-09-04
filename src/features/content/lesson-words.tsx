@@ -111,64 +111,47 @@ export function LessonWords() {
           )}
         </div>
 
-        <div className='grid gap-4 sm:grid-cols-1 lg:grid-cols-2'>
+        <div className='grid gap-2 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
           {words.map((word) => (
-            <Card key={word.id} className='hover:shadow-md transition-shadow'>
-              <CardHeader className='pb-3'>
-                <div className='flex items-center justify-between'>
-                  <CardTitle className='text-xl'>{word.word}</CardTitle>
-                  <Badge variant='outline'>#{word.order_index}</Badge>
-                </div>
-                <CardDescription className='text-lg font-medium text-blue-600'>
-                  {word.meaning}
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className='space-y-4'>
-                {word.definition && (
-                  <div className='space-y-2'>
-                    <div className='flex items-center space-x-2'>
-                      <FileText className='h-4 w-4 text-muted-foreground' />
-                      <span className='text-sm font-medium'>Ta'rif</span>
-                    </div>
-                    <p className='text-sm text-muted-foreground pl-6'>{word.definition}</p>
+            <Card key={word.id}>
+              <CardContent className='px-3 py-0'>
+                <div className='flex items-start justify-between'>
+                  <div className='flex-1 space-y-1'>
+                    <div className='font-medium'>{word.word} - {word.meaning}</div>
+                    <div className='text-sm text-muted-foreground'>{word.definition || 'Ta\'rif mavjud emas'}</div>
+                    <div className='text-sm italic text-muted-foreground'>"{word.example_sentence || 'Misol mavjud emas'}"</div>
                   </div>
-                )}
-
-                {word.example_sentence && (
-                  <div className='space-y-2'>
-                    <div className='flex items-center space-x-2'>
-                      <FileText className='h-4 w-4 text-muted-foreground' />
-                      <span className='text-sm font-medium'>Misol</span>
-                    </div>
-                    <p className='text-sm italic pl-6 border-l-2 border-blue-200 bg-blue-50 p-3 rounded'>
-                      "{word.example_sentence}"
-                    </p>
+                  <div className='flex flex-col space-y-1 ml-3'>
+                    {word.audio_url ? (
+                      <Button 
+                        size='sm'
+                        variant='outline'
+                        onClick={() => playAudio(word.audio_url)}
+                        className='h-8 w-8 p-0'
+                      >
+                        <Volume2 className='h-4 w-4' />
+                      </Button>
+                    ) : (
+                      <div className='h-8 w-8 border rounded flex items-center justify-center text-muted-foreground'>
+                        <Volume2 className='h-4 w-4 opacity-30' />
+                      </div>
+                    )}
+                    
+                    {word.image_url ? (
+                      <Button 
+                        size='sm'
+                        variant='outline'
+                        onClick={() => window.open(word.image_url, '_blank')}
+                        className='h-8 w-8 p-0'
+                      >
+                        <Image className='h-4 w-4' />
+                      </Button>
+                    ) : (
+                      <div className='h-8 w-8 border rounded flex items-center justify-center text-muted-foreground'>
+                        <Image className='h-4 w-4 opacity-30' />
+                      </div>
+                    )}
                   </div>
-                )}
-
-                <div className='flex items-center space-x-2 pt-2'>
-                  {word.image_url && (
-                    <Button 
-                      size='sm'
-                      variant='outline'
-                      onClick={() => window.open(word.image_url, '_blank')}
-                    >
-                      <Image className='h-3 w-3 mr-1' />
-                      Rasm
-                    </Button>
-                  )}
-                  
-                  {word.audio_url && (
-                    <Button 
-                      size='sm'
-                      variant='outline'
-                      onClick={() => playAudio(word.audio_url)}
-                    >
-                      <Volume2 className='h-3 w-3 mr-1' />
-                      Audio
-                    </Button>
-                  )}
                 </div>
               </CardContent>
             </Card>

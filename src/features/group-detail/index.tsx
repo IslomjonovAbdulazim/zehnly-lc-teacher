@@ -25,7 +25,7 @@ export function GroupDetail() {
   const [groupData, setGroupData] = useState<GroupDetail | null>(null)
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('leaderboard')
+  const [activeTab, setActiveTab] = useState('students')
 
   useEffect(() => {
     const loadGroupData = async () => {
@@ -105,120 +105,34 @@ export function GroupDetail() {
           <p className='text-muted-foreground'>{groupData.group.course_id}-kurs • {groupData.students.length} talaba</p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className='space-y-6'>
-          <TabsList>
-            <TabsTrigger value='leaderboard'>
-              <Trophy className='h-4 w-4 mr-2' />
-              Reyting
-            </TabsTrigger>
-            <TabsTrigger value='students'>
-              <Users className='h-4 w-4 mr-2' />
-              Talabalar
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value='students' className='space-y-4'>
+        <div className='space-y-2'>
+          <h2 className='text-lg font-semibold'>Talabalar</h2>
+          <div className='space-y-1'>
             {groupData.students.map((student) => (
-              <Card key={student.profile.id} className='hover:shadow-md transition-shadow'>
-                <CardContent className='p-6'>
+              <Card key={student.profile.id} className='hover:bg-accent/50'>
+                <CardContent className='px-3 py-0'>
                   <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-4'>
-                      <Avatar>
-                        <AvatarFallback>
-                          {student.profile.full_name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className='font-medium text-lg'>{student.profile.full_name}</h3>
-                        <p className='text-sm text-muted-foreground'>
-                          #{student.rank}-o'rin • Qo'shilgan {new Date(student.profile.created_at).toLocaleDateString()}
-                        </p>
+                    <div className='flex items-center space-x-3'>
+                      <span className='text-sm font-medium'>#{student.rank}</span>
+                      <span className='font-medium'>{student.profile.full_name}</span>
+                      <div className='flex items-center space-x-1'>
+                        <Coins className='h-3 w-3 text-yellow-500' />
+                        <span className='text-sm'>{student.progress.total_coins}</span>
                       </div>
                     </div>
-                    
-                    <div className='flex items-center space-x-6'>
-                      <div className='text-center'>
-                        <div className='text-2xl font-bold'>{student.progress.completed_lessons}</div>
-                        <div className='text-xs text-muted-foreground'>/ {student.progress.total_lessons} dars</div>
-                      </div>
-                      
-                      <div className='text-center'>
-                        <div className='text-2xl font-bold'>{Math.round(student.progress.average_percentage)}%</div>
-                        <div className='text-xs text-muted-foreground'>o'rtacha ball</div>
-                      </div>
-                      
-                      <div className='text-center flex items-center'>
-                        <Coins className='h-4 w-4 mr-1 text-yellow-500' />
-                        <div className='text-xl font-bold'>{student.progress.total_coins}</div>
-                      </div>
-                      
-                      <Button 
-                        size='sm'
-                        onClick={() => handleStudentClick(student.profile.id)}
-                      >
-                        <Eye className='h-4 w-4 mr-2' />
-                        Batafsil
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className='mt-4'>
-                    <div className='flex justify-between text-sm mb-2'>
-                      <span>Muvaffaqiyat</span>
-                      <span>{Math.round((student.progress.completed_lessons / student.progress.total_lessons) * 100)}%</span>
-                    </div>
-                    <div className='w-full bg-gray-200 rounded-full h-2'>
-                      <div 
-                        className='bg-blue-600 h-2 rounded-full transition-all'
-                        style={{ width: `${(student.progress.completed_lessons / student.progress.total_lessons) * 100}%` }}
-                      ></div>
-                    </div>
+                    <Button 
+                      size='sm'
+                      onClick={() => handleStudentClick(student.profile.id)}
+                    >
+                      <Eye className='h-4 w-4 mr-2' />
+                      Batafsil
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
             ))}
-          </TabsContent>
-
-          <TabsContent value='leaderboard' className='space-y-4'>
-            <Card>
-              <CardHeader>
-                <CardTitle className='flex items-center'>
-                  <Trophy className='h-5 w-5 mr-2 text-yellow-500' />
-                  Guruh Reytingi
-                </CardTitle>
-                <CardDescription>Eng ko`p tanga yig`gan talabalar</CardDescription>
-              </CardHeader>
-              <CardContent className='space-y-4'>
-                {leaderboard.map((entry) => (
-                  <div key={entry.profile_id} className='flex items-center justify-between p-4 border rounded-lg'>
-                    <div className='flex items-center space-x-4'>
-                      <div className='flex items-center justify-center w-8 h-8 rounded-full bg-gray-100'>
-                        {entry.rank === 1 && <Medal className='h-5 w-5 text-yellow-500' />}
-                        {entry.rank === 2 && <Medal className='h-5 w-5 text-gray-400' />}
-                        {entry.rank === 3 && <Medal className='h-5 w-5 text-orange-500' />}
-                        {entry.rank > 3 && <span className='text-sm font-bold'>#{entry.rank}</span>}
-                      </div>
-                      <Avatar>
-                        <AvatarFallback>
-                          {entry.full_name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h4 className='font-medium'>{entry.full_name}</h4>
-                        <p className='text-sm text-muted-foreground'>#{entry.rank}-o'rin</p>
-                      </div>
-                    </div>
-                    
-                    <div className='flex items-center space-x-2'>
-                      <Coins className='h-4 w-4 text-yellow-500' />
-                      <span className='font-bold text-lg'>{entry.total_coins}</span>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </Main>
     </>
   )

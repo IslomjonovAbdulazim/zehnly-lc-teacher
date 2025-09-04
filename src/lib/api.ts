@@ -204,6 +204,99 @@ export interface Word {
   order_index: number
 }
 
+export interface StudentModules {
+  student: {
+    id: number
+    full_name: string
+    created_at: string
+  }
+  course: {
+    id: number
+    title: string
+    description: string
+    progress: {
+      overall_percentage: number
+      completed_lessons: number
+      total_lessons: number
+    }
+  }
+  modules: Array<{
+    id: number
+    title: string
+    description: string
+    order_index: number
+    progress: {
+      percentage: number
+      completed_lessons: number
+      total_lessons: number
+    }
+  }>
+}
+
+export interface ModuleLessons {
+  module: {
+    id: number
+    title: string
+    description: string
+    order_index: number
+  }
+  lessons: Array<{
+    id: number
+    title: string
+    description: string
+    order_index: number
+    progress: {
+      percentage: number
+      completed: boolean
+      last_practiced: string
+    }
+    word_stats: {
+      total_words: number
+      weak_words_count: number
+      practiced_words: number
+    }
+  }>
+}
+
+export interface LessonWords {
+  lesson: {
+    id: number
+    title: string
+    description: string
+    order_index: number
+    progress: {
+      percentage: number
+      completed: boolean
+      last_practiced: string
+    }
+  }
+  words: Array<{
+    id: number
+    word: string
+    meaning: string
+    definition: string
+    example_sentence: string
+    image_url: string
+    audio_url: string
+    order_index: number
+    stats: {
+      total_attempts: number
+      total_correct: number
+      accuracy_rate: number
+      last_seven_attempts: string
+      recent_accuracy: number
+      last_practiced: string
+      is_weak: boolean
+    }
+  }>
+  summary: {
+    total_words: number
+    weak_words_count: number
+    practiced_words: number
+    mastered_words: number
+  }
+}
+
 export const teacherApi = {
   getDashboard: async (): Promise<DashboardData> => {
     const response = await api.get<ApiResponse<DashboardData>>('/teacher/dashboard')
@@ -251,6 +344,21 @@ export const teacherApi = {
     confirm_password: string
   }): Promise<{ message: string }> => {
     const response = await api.patch<ApiResponse<{ message: string }>>('/teacher/password', data)
+    return response.data.data
+  },
+
+  getStudentModules: async (studentId: number): Promise<StudentModules> => {
+    const response = await api.get<ApiResponse<StudentModules>>(`/teacher/students/${studentId}/modules`)
+    return response.data.data
+  },
+
+  getModuleLessons: async (studentId: number, moduleId: number): Promise<ModuleLessons> => {
+    const response = await api.get<ApiResponse<ModuleLessons>>(`/teacher/students/${studentId}/modules/${moduleId}/lessons`)
+    return response.data.data
+  },
+
+  getLessonWords: async (studentId: number, lessonId: number): Promise<LessonWords> => {
+    const response = await api.get<ApiResponse<LessonWords>>(`/teacher/students/${studentId}/lessons/${lessonId}/words`)
     return response.data.data
   },
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, BookOpen, TrendingDown, Calendar, Target } from 'lucide-react'
+import { ArrowLeft, BookOpen, ChevronRight } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -16,47 +16,76 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
-import { teacherApi, type StudentProgress } from '@/lib/api'
+import { teacherApi, type StudentModules, type ModuleLessons, type LessonWords } from '@/lib/api'
 import { toast } from 'sonner'
 
 export function StudentProgress() {
   const { studentId } = useParams({ strict: false })
   const navigate = useNavigate()
-  const [studentData, setStudentData] = useState<StudentProgress | null>(null)
+  const [studentModules, setStudentModules] = useState<StudentModules | null>(null)
+  const [selectedModule, setSelectedModule] = useState<number | null>(null)
+  const [moduleLessons, setModuleLessons] = useState<ModuleLessons | null>(null)
+  const [selectedLesson, setSelectedLesson] = useState<number | null>(null)
+  const [lessonWords, setLessonWords] = useState<LessonWords | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const loadStudentProgress = async () => {
+    const loadStudentModules = async () => {
       if (!studentId) return
       
       try {
         setLoading(true)
-        const data = await teacherApi.getStudentProgress(parseInt(studentId))
-        setStudentData(data)
+        const data = await teacherApi.getStudentModules(parseInt(studentId))
+        setStudentModules(data)
       } catch (error) {
-        console.error('Failed to load student progress:', error)
-        toast.error('Talaba muvaffaqiyati ma\'lumotini yuklashda xatolik yuz berdi')
+        console.error('Failed to load student modules:', error)
+        toast.error('Talaba modullarini yuklashda xatolik yuz berdi')
       } finally {
         setLoading(false)
       }
     }
 
-    loadStudentProgress()
+    loadStudentModules()
   }, [studentId])
 
-  const getAccuracyRate = (correct: number, total: number) => {
-    return total > 0 ? Math.round((correct / total) * 100) : 0
+  const handleModuleClick = async (moduleId: number) => {
+    if (!studentId) return
+    
+    try {
+      setSelectedModule(moduleId)
+      setSelectedLesson(null)
+      setLessonWords(null)
+      const data = await teacherApi.getModuleLessons(parseInt(studentId), moduleId)
+      setModuleLessons(data)
+    } catch (error) {
+      console.error('Failed to load module lessons:', error)
+      toast.error('Modul darslarini yuklashda xatolik yuz berdi')
+    }
   }
 
-  const getAttemptsVisual = (attempts: string) => {
-    return attempts.split('').map((attempt, index) => (
-      <div
-        key={index}
-        className={`w-3 h-3 rounded-full ${
-          attempt === '1' ? 'bg-green-500' : 'bg-red-500'
-        }`}
-      />
-    ))
+  const handleLessonClick = async (lessonId: number) => {
+    if (!studentId) return
+    
+    try {
+      setSelectedLesson(lessonId)
+      const data = await teacherApi.getLessonWords(parseInt(studentId), lessonId)
+      setLessonWords(data)
+    } catch (error) {
+      console.error('Failed to load lesson words:', error)
+      toast.error('Dars so\'zlarini yuklashda xatolik yuz berdi')
+    }
+  }
+
+  const handleBackClick = () => {
+    if (selectedLesson) {
+      setSelectedLesson(null)
+      setLessonWords(null)
+    } else if (selectedModule) {
+      setSelectedModule(null)
+      setModuleLessons(null)
+    } else {
+      navigate({ to: '/groups' })
+    }
   }
 
   if (loading) {
@@ -83,7 +112,7 @@ export function StudentProgress() {
     )
   }
 
-  if (!studentData) return null
+  if (!studentModules) return null
 
   return (
     <>
@@ -91,11 +120,11 @@ export function StudentProgress() {
         <Button 
           variant='ghost' 
           size='sm'
-          onClick={() => navigate({ to: '/groups' })}
+          onClick={handleBackClick}
           className='mr-4'
         >
           <ArrowLeft className='h-4 w-4 mr-2' />
-          Guruhlarga Qaytish
+          {selectedLesson ? 'Darslarga Qaytish' : selectedModule ? 'Modullarga Qaytish' : 'Guruhlarga Qaytish'}
         </Button>
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
@@ -109,144 +138,97 @@ export function StudentProgress() {
           <div className='flex items-center space-x-4'>
             <Avatar className='h-16 w-16'>
               <AvatarFallback className='text-lg'>
-                {studentData.student.full_name.split(' ').map(n => n[0]).join('')}
+                {studentModules.student.full_name.split(' ').map(n => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
             <div>
-              <h1 className='text-3xl font-bold tracking-tight'>{studentData.student.full_name}</h1>
+              <h1 className='text-3xl font-bold tracking-tight'>{studentModules.student.full_name}</h1>
               <p className='text-muted-foreground'>
-                Talaba bo'lgan vaqt {new Date(studentData.student.created_at).toLocaleDateString()}
+                {studentModules.course.title} - {studentModules.course.progress.overall_percentage}%
               </p>
             </div>
           </div>
         </div>
 
-        <div className='grid gap-6 lg:grid-cols-3 mb-6'>
-          <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-sm font-medium'>Dars Muvaffaqiyati</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold mb-2'>
-                {studentData.progress.filter(p => p.completed).length} / {studentData.progress.length}
-              </div>
-              <p className='text-xs text-muted-foreground'>Tugallangan darslar</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-sm font-medium'>O'rtacha Ball</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold mb-2'>
-                {Math.round(studentData.progress.reduce((acc, curr) => acc + curr.percentage, 0) / studentData.progress.length)}%
-              </div>
-              <p className='text-xs text-muted-foreground'>Barcha darslar bo'yicha</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-sm font-medium'>Zaif So'zlar</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold mb-2'>{studentData.weak_words.length}</div>
-              <p className='text-xs text-muted-foreground'>Diqqat talab qiladi</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className='grid gap-6 lg:grid-cols-2'>
-          <Card>
-            <CardHeader>
-              <CardTitle className='flex items-center'>
-                <BookOpen className='h-5 w-5 mr-2' />
-                Dars Muvaffaqiyati
-              </CardTitle>
-              <CardDescription>Har bir dars bo'yicha natijalar</CardDescription>
-            </CardHeader>
-            <CardContent className='space-y-4'>
-              {studentData.progress.map((lesson) => (
-                <div key={lesson.lesson_id} className='flex items-center justify-between p-4 border rounded-lg'>
-                  <div>
-                    <h4 className='font-medium'>{lesson.lesson_id}-dars</h4>
-                    <p className='text-sm text-muted-foreground'>
-                      So'nggi mashq: {new Date(lesson.last_practiced).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className='text-right space-y-1'>
-                    <div className='text-lg font-bold'>{lesson.percentage}%</div>
-                    <Badge variant={lesson.completed ? 'default' : 'secondary'}>
-                      {lesson.completed ? 'Tugallangan' : 'Jarayonda'}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className='flex items-center'>
-                <TrendingDown className='h-5 w-5 mr-2 text-red-500' />
-                Zaif So'zlar
-              </CardTitle>
-              <CardDescription>Ko'proq mashq talab qiladigan so'zlar</CardDescription>
-            </CardHeader>
-            <CardContent className='space-y-4'>
-              {studentData.weak_words.map((word) => (
-                <div key={word.word_id} className='p-4 border rounded-lg space-y-3'>
-                  <div className='flex items-center justify-between'>
-                    <div>
-                      <h4 className='font-medium'>{word.word}</h4>
-                      <p className='text-sm text-muted-foreground'>{word.meaning}</p>
+        {!selectedModule && (
+          <div>
+            <h2 className='text-lg font-semibold mb-2'>Modullar</h2>
+            <div className='grid grid-cols-2 lg:grid-cols-3 gap-2'>
+              {studentModules.modules.map((module) => (
+                <Card key={module.id} className='cursor-pointer hover:bg-accent/50' onClick={() => handleModuleClick(module.id)}>
+                  <CardContent className='px-3 py-0'>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-medium text-sm'>{module.title}</span>
+                      <div className='flex items-center space-x-2'>
+                        <span className='text-sm'>{module.progress.percentage}%</span>
+                        <ChevronRight className='h-4 w-4 text-muted-foreground' />
+                      </div>
                     </div>
-                    <Badge variant='outline'>
-                      {getAccuracyRate(word.total_correct, word.total_attempts)}% aniqlik
-                    </Badge>
-                  </div>
-                  
-                  <div className='space-y-2'>
-                    <p className='text-xs text-muted-foreground'>So'nggi 7 ta urinish:</p>
-                    <div className='flex space-x-1'>
-                      {getAttemptsVisual(word.last_seven_attempts)}
-                    </div>
-                    <p className='text-xs text-muted-foreground'>
-                      {word.total_attempts} urinishdan {word.total_correct} ta to'g'ri
-                    </p>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               ))}
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </div>
+        )}
 
-        <Card className='mt-6'>
-          <CardHeader>
-            <CardTitle className='flex items-center'>
-              <Calendar className='h-5 w-5 mr-2' />
-              So'nggi Faoliyat
-            </CardTitle>
-            <CardDescription>Turli faoliyatlardan olingan ballar</CardDescription>
-          </CardHeader>
-          <CardContent className='space-y-3'>
-            {studentData.recent_activity.map((activity, index) => (
-              <div key={index} className='flex items-center justify-between p-3 border rounded-lg'>
-                <div className='flex items-center space-x-3'>
-                  <Target className='h-4 w-4 text-muted-foreground' />
-                  <div>
-                    <p className='font-medium capitalize'>{activity.source}</p>
-                    <p className='text-sm text-muted-foreground'>
-                      {new Date(activity.earned_at).toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-                <Badge variant='outline'>+{activity.amount} ball</Badge>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        {selectedModule && moduleLessons && !selectedLesson && (
+          <div>
+            <h2 className='text-lg font-semibold mb-2'>{moduleLessons.module.title} - Darslar</h2>
+            <div className='grid grid-cols-2 lg:grid-cols-3 gap-2'>
+              {moduleLessons.lessons.map((lesson) => (
+                <Card key={lesson.id} className='cursor-pointer hover:bg-accent/50' onClick={() => handleLessonClick(lesson.id)}>
+                  <CardContent className='px-3 py-0'>
+                    <div className='flex items-center justify-between'>
+                      <span className='font-medium text-sm'>{lesson.title}</span>
+                      <div className='flex items-center space-x-2'>
+                        <span className='text-sm'>{lesson.progress.percentage}%</span>
+                        <ChevronRight className='h-4 w-4 text-muted-foreground' />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {selectedLesson && lessonWords && (
+          <div>
+            <h2 className='text-lg font-semibold mb-2'>{lessonWords.lesson.title} - So'zlar</h2>
+            <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2'>
+              {lessonWords.words.map((word) => (
+                <Card key={word.id}>
+                  <CardContent className='px-3 py-0'>
+                    <div className='flex items-center justify-between'>
+                      <div className='space-y-1'>
+                        <div className='text-sm font-medium'>{word.word} - {word.meaning}</div>
+                        <div className='flex space-x-1'>
+                          {Array.from({ length: 7 }, (_, index) => {
+                            const attempt = word.stats.last_seven_attempts[index]
+                            return (
+                              <div
+                                key={index}
+                                className={`w-2 h-2 rounded-full ${
+                                  attempt === '1' ? 'bg-green-500' : 
+                                  attempt === '0' ? 'bg-red-500' : 'bg-gray-300'
+                                }`}
+                              />
+                            )
+                          })}
+                        </div>
+                      </div>
+                      <div className={`text-sm font-medium px-2 py-1 rounded ${
+                        word.stats.is_weak ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+                      }`}>
+                        {word.stats.recent_accuracy}%
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
       </Main>
     </>
   )

@@ -1,8 +1,10 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
+import { teacherApi } from '@/lib/api'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -40,41 +42,71 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-const defaultValues: Partial<ProfileFormValues> = {
-  full_name: 'Jane Smith',
-  email: 'teacher@example.com',
-}
-
 export function ProfileForm() {
   const [isLoading, setIsLoading] = useState(false)
+  const { auth } = useAuthStore()
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
+    defaultValues: {
+      full_name: '',
+      email: '',
+    },
     mode: 'onChange',
   })
 
-  const onSubmit = (data: ProfileFormValues) => {
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const profileData = await teacherApi.getProfile()
+        form.reset({
+          full_name: profileData.profile.full_name,
+          email: profileData.user.email,
+        })
+      } catch (error) {
+        console.error('Failed to load profile:', error)
+        form.reset({
+          full_name: '',
+          email: auth.user?.email || '',
+        })
+      }
+    }
+
+    loadProfile()
+  }, [form, auth.user?.email])
+
+  const onSubmit = async (data: ProfileFormValues) => {
     setIsLoading(true)
     
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 1500)),
-      {
-        loading: 'Profil yangilanmoqda...',
-        success: () => {
-          setIsLoading(false)
-          if (data.new_password) {
-            form.reset({
-              ...data,
-              current_password: '',
-              new_password: '',
-              confirm_password: '',
-            })
-          }
-          return 'Profil muvaffaqiyatli yangilandi!'
-        },
-        error: 'Profilni yangilash amalga oshmadi',
+    try {
+      if (data.new_password && data.current_password && data.confirm_password) {
+        await teacherApi.changePassword({
+          current_password: data.current_password,
+          new_password: data.new_password,
+          confirm_password: data.confirm_password
+        })
+        form.reset({
+          ...data,
+          current_password: '',
+          new_password: '',
+          confirm_password: '',
+        })
+        toast.success('Parol muvaffaqiyatli yangilandi!')
       }
-    )
+      
+      if (data.full_name !== form.formState.defaultValues?.full_name) {
+        await teacherApi.updateProfile({ full_name: data.full_name })
+        toast.success('Profil muvaffaqiyatli yangilandi!')
+      }
+      
+      if (!data.new_password && data.full_name === form.formState.defaultValues?.full_name) {
+        toast.info('Hech qanday o\'zgartirish amalga oshirilmadi')
+      }
+    } catch (error) {
+      console.error('Profile update failed:', error)
+      toast.error('Ma\'lumotlarni yangilashda xatolik yuz berdi')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

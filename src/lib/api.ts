@@ -39,6 +39,7 @@ export interface DashboardData {
   teacher: {
     id: number
     full_name: string
+    email?: string
   }
   stats: {
     assigned_groups: number
@@ -359,6 +360,16 @@ export const teacherApi = {
 
   getLessonWords: async (studentId: number, lessonId: number): Promise<LessonWords> => {
     const response = await api.get<ApiResponse<LessonWords>>(`/teacher/students/${studentId}/lessons/${lessonId}/words`)
+    return response.data.data
+  },
+
+  updateProfile: async (data: { full_name: string }): Promise<{ id: number, full_name: string, message: string }> => {
+    const response = await api.patch<ApiResponse<{ id: number, full_name: string, message: string }>>('/teacher/profile', data)
+    return response.data.data
+  },
+
+  getProfile: async (): Promise<{ user: { email: string }, profile: { full_name: string } }> => {
+    const response = await api.get<ApiResponse<{ user: { email: string }, profile: { full_name: string } }>>('/auth/me')
     return response.data.data
   },
 }
